@@ -1,0 +1,15 @@
+allOf:
+  - $ref: '#/components/schemas/ValidationResultKey'
+  - type: object
+    required:
+      - attributes
+    properties:
+      attributes:
+        required:
+          - claims
+        type: object
+        properties:
+          claims:
+            type: array
+            items:
+              $ref: '#/components/schemas/Claim'

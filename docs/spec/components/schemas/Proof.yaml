@@ -1,0 +1,16 @@
+description: 'Auth proof'
+type: object
+required:
+  - proof
+  - role
+properties:
+  role:
+    type: integer
+    description: User role stored in credential
+  group:
+    type: integer
+    description: Group identifier stored in credential
+  proof:
+    type: object
+    format: json.RawMessage
+    description: JSON encoded ZK proof (MTPV2OnChain) the user own a credential with Hash(role, groups). If group is not provided then Hash(role).

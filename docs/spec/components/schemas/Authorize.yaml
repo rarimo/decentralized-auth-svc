@@ -1,0 +1,16 @@
+allOf:
+  - $ref: '#/components/schemas/AuthorizeKey'
+  - type: object
+    x-go-is-request: true
+    required:
+      - attributes
+    properties:
+      attributes:
+        required:
+          - proofs
+        type: object
+        properties:
+          proofs:
+            type: array
+            items:
+              $ref: '#/components/schemas/Proof'

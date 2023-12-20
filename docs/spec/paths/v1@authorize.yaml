@@ -1,0 +1,34 @@
+post:
+  tags:
+    - Authorize
+  summary: Authorize user
+  description: |
+    Authorize user by ZKP and receive JWT.
+  operationId: authorize
+  requestBody:
+    required: true
+    content:
+      application/vnd.api+json:
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: '#/components/schemas/Authorize'
+  responses:
+    200:
+      description: OK
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                $ref: '#/components/schemas/Token'
+    400:
+      $ref: '#/components/responses/invalidParameter'
+    500:
+      $ref: '#/components/responses/internalError'

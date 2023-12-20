@@ -1,0 +1,11 @@
+description: 'Authorized user personal data'
+type: object
+required:
+  - role
+properties:
+  role:
+    type: integer
+    description: User role id authorized with
+  group:
+    type: integer
+    description: User group id authorized with
