@@ -15,10 +15,9 @@ properties:
     type: string
     enum: [ access, refresh ]
   expiredAt:
-    type: string
-    format: time.Time
-    description: The time (UTC) RFC3339 format when the token expires
-    example: "2021-08-12T13:00:00Z"
+    type: integer
+    format: uint64
+    description: The time (UTC) UNIX format when the token expires
   userDID:
     type: string
     example: "did:iden3:readonly:tM1QCJ7ytcbvLB7EFQhGsJPumc11DEE18gEvAzxE7"

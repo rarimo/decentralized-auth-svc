@@ -5,9 +5,12 @@ go 1.21.0
 require (
 	github.com/alecthomas/kingpin v2.2.6+incompatible
 	github.com/go-chi/chi v4.1.2+incompatible
+	github.com/golang-jwt/jwt/v5 v5.2.0
+	github.com/pkg/errors v0.9.1
 	gitlab.com/distributed_lab/ape v1.7.1
 	gitlab.com/distributed_lab/kit v1.11.2
 	gitlab.com/distributed_lab/logan v3.8.1+incompatible
+	gotest.tools v2.2.0+incompatible
 )
 
 require (
@@ -18,6 +21,7 @@ require (
 	github.com/getsentry/raven-go v0.2.0 // indirect
 	github.com/getsentry/sentry-go v0.7.0 // indirect
 	github.com/go-ozzo/ozzo-validation/v4 v4.2.1 // indirect
+	github.com/google/go-cmp v0.4.0 // indirect
 	github.com/google/jsonapi v0.0.0-20200226002910-c8283f632fb7 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.3 // indirect
@@ -25,7 +29,6 @@ require (
 	github.com/mitchellh/mapstructure v1.1.2 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/pelletier/go-toml v1.2.0 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/sirupsen/logrus v1.6.0 // indirect
 	github.com/spf13/afero v1.1.2 // indirect
 	github.com/spf13/cast v1.3.0 // indirect

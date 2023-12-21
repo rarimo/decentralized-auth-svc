@@ -4,13 +4,11 @@
 
 package resources
 
-import "time"
-
 // JWT token
 type Jwt struct {
 	Claims []Claim `json:"claims"`
-	// The time (UTC) RFC3339 format when the token expires
-	ExpiredAt time.Time `json:"expiredAt"`
+	// The time (UTC) UNIX format when the token expires
+	ExpiredAt uint64 `json:"expiredAt"`
 	// Base64 encoded JWT
 	Token     string `json:"token"`
 	TokenType string `json:"tokenType"`
