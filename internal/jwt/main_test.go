@@ -16,8 +16,9 @@ func TestJWT(t *testing.T) {
 	)
 
 	issuer := JWTIssuer{
-		prv:        make([]byte, 0, 64),
-		expiration: time.Hour,
+		prv:               make([]byte, 0, 64),
+		accessExpiration:  time.Hour,
+		refreshExpiration: time.Hour,
 	}
 
 	_, err := rand.Read(issuer.prv)
