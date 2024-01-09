@@ -3,6 +3,8 @@ package zkp
 import (
 	"fmt"
 	"math/big"
+	"strconv"
+	"time"
 
 	zkptypes "github.com/iden3/go-rapidsnark/types"
 	"github.com/iden3/go-rapidsnark/verifier"
@@ -30,11 +32,12 @@ import (
 // 2 - operator equals (index 12)
 // 20020101 - value (index 13 and more)
 const (
-	OperatorSignalsIndex = 12
-	ValueSignalsIndex    = 13
-	SchemaSignalsIndex   = 8
-	IssuerIdSignalsIndex = 3
-	UserIdSignalsIndex   = 1
+	OperatorSignalsIndex  = 12
+	ValueSignalsIndex     = 13
+	SchemaSignalsIndex    = 8
+	IssuerIdSignalsIndex  = 3
+	UserIdSignalsIndex    = 1
+	TimestampSignalsIndex = 7
 )
 
 const (
@@ -42,21 +45,46 @@ const (
 	SchemaValue   = "" // TODO specify or move to cfg
 )
 
+const (
+	ProofValidnessDuration = 5 * time.Minute
+)
+
+var verificationKey []byte
+
+func init() {
+	var err error
+	if verificationKey, err = circuit.VerificationKey.ReadFile(circuit.VerificationKeyFileName); err != nil {
+		panic(errors.Wrap(err, fmt.Sprintf("failed to parse: %s", circuit.VerificationKeyFileName)))
+	}
+}
+
 // VerifyProof performs ZK Groth16 proof verification based on specified verification key and hardcoded/passed parameters.
 func VerifyProof(issuer string, user string, role int32, group *int32, proof *zkptypes.ZKProof) error {
+	if err := verifyTimestamp(proof.PubSignals[TimestampSignalsIndex]); err != nil {
+		return err
+	}
+
 	proof.PubSignals[OperatorSignalsIndex] = OperatorValue
 	proof.PubSignals[SchemaSignalsIndex] = SchemaValue
 	proof.PubSignals[IssuerIdSignalsIndex] = issuer
 	proof.PubSignals[UserIdSignalsIndex] = user
 	proof.PubSignals[ValueSignalsIndex] = new(big.Int).SetBytes(pkg.GetRoleHash(role, group)).String()
 
-	verificationKey, err := circuit.VerificationKey.ReadFile(circuit.VerificationKeyFileName)
-	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to parse: %s", circuit.VerificationKeyFileName))
-	}
-
 	if err := verifier.VerifyGroth16(*proof, verificationKey); err != nil {
 		return errors.Wrap(err, "failed to verify generated proof")
+	}
+
+	return nil
+}
+
+func verifyTimestamp(proofTimestamp string) error {
+	timestamp, err := strconv.ParseInt(proofTimestamp, 10, 64)
+	if err != nil {
+		return err
+	}
+
+	if timestamp+int64(ProofValidnessDuration) < time.Now().Unix() {
+		return errors.New("to old proof")
 	}
 
 	return nil
