@@ -5,7 +5,8 @@ required:
   - expiredAt
   - tokenType
   - userDID
-  - claims
+  - orgDID
+  - role
 properties:
   token:
     type: string
@@ -14,15 +15,3 @@ properties:
   tokenType:
     type: string
     enum: [ access, refresh ]
-  expiredAt:
-    type: integer
-    format: uint64
-    description: The time (UTC) UNIX format when the token expires
-  userDID:
-    type: string
-    example: "did:iden3:readonly:tM1QCJ7ytcbvLB7EFQhGsJPumc11DEE18gEvAzxE7"
-    description: User DID
-  claims:
-    type: array
-    items:
-      $ref: '#/components/schemas/Claim'

@@ -15,11 +15,6 @@ func TestJWT(t *testing.T) {
 		group1 *int32 = &val
 	)
 
-	r1 := Role{
-		Role:  role1,
-		Group: group1,
-	}
-
 	issuer := JWTIssuer{
 		prv:        make([]byte, 0, 64),
 		expiration: time.Hour,
@@ -28,14 +23,18 @@ func TestJWT(t *testing.T) {
 	_, err := rand.Read(issuer.prv)
 	assert.NilError(t, err)
 
-	jwt, err := issuer.IssueJWT("did:oleg", Roles{r1}, AccessTokenType)
+	jwt, err := issuer.IssueJWT(
+		"did:iden3:readonly:tM1QCJ7ytcbvLB7EFQhGsJPumc11DEE18gEvAzxE7",
+		"did:iden3:readonly:tM1QCJ7ytcbvLB7EFQhGsJPumc11DEE18gEvAzxE7",
+		role1, group1, AccessTokenType,
+	)
 	assert.NilError(t, err)
 
-	did, roles, err := issuer.ValidateJWT(jwt)
+	did, org, r, g, err := issuer.ValidateJWT(jwt)
 	assert.NilError(t, err)
 
-	assert.Equal(t, did, "did:oleg")
-	assert.Equal(t, len(roles), 1)
-	assert.Equal(t, roles[0].Role, r1.Role)
-	assert.Equal(t, *roles[0].Group, *r1.Group)
+	assert.Equal(t, did, "did:iden3:readonly:tM1QCJ7ytcbvLB7EFQhGsJPumc11DEE18gEvAzxE7")
+	assert.Equal(t, org, "did:iden3:readonly:tM1QCJ7ytcbvLB7EFQhGsJPumc11DEE18gEvAzxE7")
+	assert.Equal(t, r, role1)
+	assert.Equal(t, *g, val)
 }

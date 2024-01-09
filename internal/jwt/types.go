@@ -2,7 +2,7 @@ package jwt
 
 import (
 	"fmt"
-	"strings"
+	"strconv"
 	"time"
 
 	jwt "github.com/golang-jwt/jwt/v5"
@@ -12,6 +12,8 @@ const (
 	UserDIDClaimName             = "sub"
 	ExpirationTimestampClaimName = "exp"
 	RoleClaimName                = "role"
+	GroupClaimName               = "group"
+	OrgDIDClaimName              = "org"
 	TokenTypeClaimName           = "type"
 )
 
@@ -21,51 +23,6 @@ var (
 	AccessTokenType  TokenType = "access"
 	RefreshTokenType TokenType = "refresh"
 )
-
-type Role struct {
-	Role  int32
-	Group *int32
-}
-
-func (r *Role) ToString() string {
-	if r.Group == nil {
-		return fmt.Sprintf("%d:", r.Role)
-	}
-
-	return fmt.Sprintf("%d:%d", r.Role, *r.Group)
-}
-
-func (r *Role) FromString(str string) {
-	var role, group int32
-	n, _ := fmt.Sscanf(str, "%d:%d", &role, &group)
-
-	r.Role = role
-	if n == 2 {
-		r.Group = &group
-	}
-}
-
-type Roles []Role
-
-func (r *Roles) ToString() string {
-	res := ""
-	for _, r := range *r {
-		if res != "" {
-			res += "|"
-		}
-		res = res + r.ToString()
-	}
-	return res
-}
-
-func (r *Roles) FromString(str string) {
-	arr := strings.Split(str, "|")
-	for _, str := range arr {
-		role := Role{}
-		role.FromString(str)
-		*r = append(*r, role)
-	}
-}
 
 type RawJWT struct {
 	claims jwt.MapClaims
@@ -81,8 +38,20 @@ func (r *RawJWT) SetExpirationTimestamp(expiration time.Duration) *RawJWT {
 	return r
 }
 
-func (r *RawJWT) SetRoles(roles Roles) *RawJWT {
-	r.claims[RoleClaimName] = roles.ToString()
+func (r *RawJWT) SetRole(role int32) *RawJWT {
+	r.claims[RoleClaimName] = fmt.Sprint(role)
+	return r
+}
+
+func (r *RawJWT) SetGroup(group *int32) *RawJWT {
+	if group != nil {
+		r.claims[GroupClaimName] = fmt.Sprint(*group)
+	}
+	return r
+}
+
+func (r *RawJWT) SetOrgDID(org string) *RawJWT {
+	r.claims[OrgDIDClaimName] = org
 	return r
 }
 
@@ -107,21 +76,60 @@ func (r *RawJWT) DID() (res string, ok bool) {
 	return
 }
 
-func (r *RawJWT) Roles() (roles Roles, ok bool) {
+func (r *RawJWT) Role() (role int32, ok bool) {
 	var (
-		val interface{}
-		res string
+		val    interface{}
+		number string
 	)
 
 	if val, ok = r.claims[RoleClaimName]; !ok {
 		return
 	}
 
-	if res, ok = val.(string); !ok {
+	if number, ok = val.(string); !ok {
 		return
 	}
 
-	roles.FromString(res)
+	num, err := strconv.ParseInt(number, 10, 64)
+	if err != nil {
+		return 0, false
+	}
+
+	return int32(num), true
+}
+
+func (r *RawJWT) Group() *int32 {
+	var (
+		val    interface{}
+		number string
+		ok     bool
+	)
+
+	if val, ok = r.claims[GroupClaimName]; !ok {
+		return nil
+	}
+
+	if number, ok = val.(string); !ok {
+		return nil
+	}
+
+	num, err := strconv.ParseInt(number, 10, 64)
+	if err != nil {
+		return nil
+	}
+
+	x := int32(num)
+	return &x
+}
+
+func (r *RawJWT) OrgDID() (did string, ok bool) {
+	var val interface{}
+
+	if val, ok = r.claims[OrgDIDClaimName]; !ok {
+		return
+	}
+
+	did, ok = val.(string)
 	return
 }
 

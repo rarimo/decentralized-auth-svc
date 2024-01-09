@@ -10,7 +10,5 @@ allOf:
           - proofs
         type: object
         properties:
-          proofs:
-            type: array
-            items:
-              $ref: '#/components/schemas/Proof'
+          proof:
+            $ref: '#/components/schemas/Proof'

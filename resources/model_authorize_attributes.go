@@ -5,5 +5,5 @@
 package resources
 
 type AuthorizeAttributes struct {
-	Proofs []Proof `json:"proofs"`
+	Proof *Proof `json:"proof,omitempty"`
 }

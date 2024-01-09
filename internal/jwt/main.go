@@ -14,27 +14,33 @@ const (
 )
 
 type JWTIssuer struct {
-	prv        []byte
-	expiration time.Duration
+	prv               []byte
+	accessExpiration  time.Duration
+	refreshExpiration time.Duration
 }
 
-func (i *JWTIssuer) IssueJWT(did string, roles Roles, typ TokenType) (string, error) {
+func (i *JWTIssuer) IssueJWT(userDID, orgDID string, role int32, group *int32, typ TokenType) (string, error) {
 	raw := (&RawJWT{make(jwt.MapClaims)}).
-		SetDID(did).
-		SetRoles(roles).
-		SetExpirationTimestamp(i.expiration)
+		SetDID(userDID).
+		SetOrgDID(orgDID).
+		SetRole(role).
+		SetGroup(group)
 
 	switch typ {
 	case AccessTokenType:
-		raw.SetTokenAccess()
+		raw.
+			SetTokenAccess().
+			SetExpirationTimestamp(i.accessExpiration)
 	case RefreshTokenType:
-		raw.SetTokenRefresh()
+		raw.
+			SetTokenRefresh().
+			SetExpirationTimestamp(i.refreshExpiration)
 	}
 
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, raw.claims).SignedString(i.prv)
 }
 
-func (i *JWTIssuer) ValidateJWT(str string) (did string, roles Roles, err error) {
+func (i *JWTIssuer) ValidateJWT(str string) (did, org string, role int32, group *int32, err error) {
 	var token *jwt.Token
 
 	key := func(token *jwt.Token) (interface{}, error) {
@@ -64,11 +70,19 @@ func (i *JWTIssuer) ValidateJWT(str string) (did string, roles Roles, err error)
 		return
 	}
 
-	roles, ok = raw.Roles()
+	org, ok = raw.OrgDID()
 	if !ok {
-		err = errors.New("invalid roles: failed to parse")
+		err = errors.New("invalid did: failed to parse")
 		return
 	}
+
+	role, ok = raw.Role()
+	if !ok {
+		err = errors.New("invalid role: failed to parse")
+		return
+	}
+
+	group = raw.Group()
 
 	return
 }
