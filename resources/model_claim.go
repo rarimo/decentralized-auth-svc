@@ -12,4 +12,6 @@ type Claim struct {
 	Org string `json:"org"`
 	// User role id authorized with
 	Role int32 `json:"role"`
+	// User DID authorized with
+	User string `json:"user"`
 }

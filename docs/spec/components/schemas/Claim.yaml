@@ -2,12 +2,17 @@ description: 'Authorized user personal data'
 type: object
 required:
   - org
+  - user
   - role
 properties:
   org:
     type: string
     example: "did:iden3:readonly:tM1QCJ7ytcbvLB7EFQhGsJPumc11DEE18gEvAzxE7"
     description: Organization DID authorized with
+  user:
+    type: string
+    example: "did:iden3:readonly:tM1QCJ7ytcbvLB7EFQhGsJPumc11DEE18gEvAzxE7"
+    description: User DID authorized with
   role:
     type: integer
     description: User role id authorized with

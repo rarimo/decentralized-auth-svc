@@ -30,6 +30,7 @@ func Validate(w http.ResponseWriter, r *http.Request) {
 			Attributes: resources.ValidationResultAttributes{
 				Claims: []resources.Claim{
 					{
+						User:  claim.UserDID,
 						Group: claim.Group,
 						Role:  claim.Role,
 						Org:   claim.OrgDID,
