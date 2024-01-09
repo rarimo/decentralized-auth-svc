@@ -5,12 +5,14 @@ import (
 	"net/http"
 
 	"github.com/rarimo/rarime-auth-svc/internal/config"
+	"github.com/rarimo/rarime-auth-svc/internal/jwt"
 	"gitlab.com/distributed_lab/logan/v3"
 )
 
 type service struct {
 	log      *logan.Entry
 	listener net.Listener
+	jwt      *jwt.JWTIssuer
 }
 
 func (s *service) run() error {
@@ -23,6 +25,7 @@ func newService(cfg config.Config) *service {
 	return &service{
 		log:      cfg.Log(),
 		listener: cfg.Listener(),
+		jwt:      cfg.JWT(),
 	}
 }
 

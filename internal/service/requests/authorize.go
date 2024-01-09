@@ -5,8 +5,8 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/pkg/errors"
 	"github.com/rarimo/rarime-auth-svc/resources"
+	"gitlab.com/distributed_lab/logan/v3/errors"
 )
 
 func NewAuthorizeRequest(r *http.Request) (*resources.AuthorizeRequest, error) {

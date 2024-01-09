@@ -133,36 +133,19 @@ func (r *RawJWT) OrgDID() (did string, ok bool) {
 	return
 }
 
-func (r *RawJWT) IsAccess() (ok bool) {
+func (r *RawJWT) TokenType() (typ TokenType, ok bool) {
 	var (
 		val interface{}
-		typ TokenType
+		str string
 	)
 
 	if val, ok = r.claims[TokenTypeClaimName]; !ok {
 		return
 	}
 
-	if typ, ok = val.(TokenType); !ok {
+	if str, ok = val.(string); !ok {
 		return
 	}
 
-	return typ == AccessTokenType
-}
-
-func (r *RawJWT) IsRefresh() (ok bool) {
-	var (
-		val interface{}
-		typ TokenType
-	)
-
-	if val, ok = r.claims[TokenTypeClaimName]; !ok {
-		return
-	}
-
-	if typ, ok = val.(TokenType); !ok {
-		return
-	}
-
-	return typ == RefreshTokenType
+	return TokenType(str), true
 }

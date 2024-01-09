@@ -40,7 +40,7 @@ func (i *JWTIssuer) IssueJWT(userDID, orgDID string, role int32, group *int32, t
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, raw.claims).SignedString(i.prv)
 }
 
-func (i *JWTIssuer) ValidateJWT(str string) (did, org string, role int32, group *int32, err error) {
+func (i *JWTIssuer) ValidateJWT(str string) (did, org string, role int32, group *int32, typ TokenType, err error) {
 	var token *jwt.Token
 
 	key := func(token *jwt.Token) (interface{}, error) {
@@ -82,7 +82,12 @@ func (i *JWTIssuer) ValidateJWT(str string) (did, org string, role int32, group 
 		return
 	}
 
-	group = raw.Group()
+	typ, ok = raw.TokenType()
+	if !ok {
+		err = errors.New("invalid token type: failed to parse")
+		return
+	}
 
+	group = raw.Group()
 	return
 }

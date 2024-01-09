@@ -5,9 +5,7 @@ log:
 listener:
   addr: :8000
 
-cop:
-  disabled: true
-  endpoint: "http://..."
-  upstream: "http://..."
-  service_name: rarime-auth-svc
-  service_port: 80
+jwt:
+  secret_key: 0x..
+  access_expiration_time: 12h
+  refresh_expiration_time: 30d

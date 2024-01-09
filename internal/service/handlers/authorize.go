@@ -98,5 +98,4 @@ func Authorize(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ape.Render(w, resp)
-	return
 }

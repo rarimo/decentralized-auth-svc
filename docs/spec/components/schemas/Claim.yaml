@@ -1,0 +1,16 @@
+description: 'Authorized user personal data'
+type: object
+required:
+  - org
+  - role
+properties:
+  org:
+    type: string
+    example: "did:iden3:readonly:tM1QCJ7ytcbvLB7EFQhGsJPumc11DEE18gEvAzxE7"
+    description: Organization DID authorized with
+  role:
+    type: integer
+    description: User role id authorized with
+  group:
+    type: integer
+    description: User group id authorized with

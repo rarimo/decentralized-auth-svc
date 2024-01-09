@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/go-chi/chi"
 	"github.com/rarimo/rarime-auth-svc/internal/service/handlers"
+	"github.com/rarimo/rarime-auth-svc/internal/service/middleware"
 	"gitlab.com/distributed_lab/ape"
 )
 
@@ -14,10 +15,16 @@ func (s *service) router() chi.Router {
 		ape.LoganMiddleware(s.log),
 		ape.CtxMiddleware(
 			handlers.CtxLog(s.log),
+			handlers.CtxJWT(s.jwt),
 		),
 	)
+
 	r.Route("/integrations/rarime-auth-svc", func(r chi.Router) {
-		// configure endpoints here
+		r.Route("/v1", func(r chi.Router) {
+			r.Post("/authorize", handlers.Authorize)
+			r.With(middleware.AuthMiddleware(s.jwt)).Get("/validate", handlers.Validate)
+			r.With(middleware.AuthMiddleware(s.jwt)).Get("/refresh", handlers.Refresh)
+		})
 	})
 
 	return r

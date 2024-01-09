@@ -13,6 +13,7 @@ type ctxKey int
 const (
 	logCtxKey ctxKey = iota
 	jwtKey
+	claimKey
 )
 
 func CtxLog(entry *logan.Entry) func(context.Context) context.Context {
@@ -27,10 +28,20 @@ func CtxJWT(issuer *jwt.JWTIssuer) func(context.Context) context.Context {
 	}
 }
 
+func CtxClaim(claim *AuthClaim) func(context.Context) context.Context {
+	return func(ctx context.Context) context.Context {
+		return context.WithValue(ctx, claimKey, claim)
+	}
+}
+
 func Log(r *http.Request) *logan.Entry {
 	return r.Context().Value(logCtxKey).(*logan.Entry)
 }
 
 func JWT(r *http.Request) *jwt.JWTIssuer {
 	return r.Context().Value(jwtKey).(*jwt.JWTIssuer)
+}
+
+func Claim(r *http.Request) *AuthClaim {
+	return r.Context().Value(claimKey).(*AuthClaim)
 }
