@@ -25,8 +25,11 @@ type clienter struct {
 func (c *clienter) Client() *Client {
 	return c.once.Do(func() interface{} {
 		var cfg = struct {
-			Addr string `fig:"addr,required"`
-		}{}
+			Addr    string `fig:"addr,required"`
+			Enabled bool   `fig:"enabled"`
+		}{
+			Enabled: true,
+		}
 
 		err := figure.
 			Out(&cfg).
