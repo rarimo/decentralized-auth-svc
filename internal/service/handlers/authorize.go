@@ -51,11 +51,13 @@ func Authorize(w http.ResponseWriter, r *http.Request) {
 	}
 
 	access, err := JWT(r).IssueJWT(
-		req.Data.ID,
-		req.Data.Attributes.Proof.Issuer,
-		req.Data.Attributes.Proof.Role,
-		req.Data.Attributes.Proof.Group,
-		jwt.AccessTokenType,
+		&jwt.AuthClaim{
+			OrgDID:  req.Data.Attributes.Proof.Issuer,
+			UserDID: req.Data.ID,
+			Role:    req.Data.Attributes.Proof.Role,
+			Group:   req.Data.Attributes.Proof.Group,
+			Type:    jwt.AccessTokenType,
+		},
 	)
 
 	if err != nil {
@@ -65,11 +67,13 @@ func Authorize(w http.ResponseWriter, r *http.Request) {
 	}
 
 	refresh, err := JWT(r).IssueJWT(
-		req.Data.ID,
-		req.Data.Attributes.Proof.Issuer,
-		req.Data.Attributes.Proof.Role,
-		req.Data.Attributes.Proof.Group,
-		jwt.AccessTokenType,
+		&jwt.AuthClaim{
+			OrgDID:  req.Data.Attributes.Proof.Issuer,
+			UserDID: req.Data.ID,
+			Role:    req.Data.Attributes.Proof.Role,
+			Group:   req.Data.Attributes.Proof.Group,
+			Type:    jwt.RefreshTokenType,
+		},
 	)
 
 	if err != nil {

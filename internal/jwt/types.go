@@ -24,9 +24,21 @@ var (
 	RefreshTokenType TokenType = "refresh"
 )
 
+// AuthClaim is a helper structure to organize all claims in one entity
+type AuthClaim struct {
+	OrgDID  string
+	UserDID string
+	Role    int32
+	Group   *int32
+	Type    TokenType
+}
+
+// RawJWT represents helper structure to provide setter and getter methods to work with JWT claims
 type RawJWT struct {
 	claims jwt.MapClaims
 }
+
+// Setters
 
 func (r *RawJWT) SetDID(did string) *RawJWT {
 	r.claims[UserDIDClaimName] = did
@@ -64,6 +76,8 @@ func (r *RawJWT) SetTokenRefresh() *RawJWT {
 	r.claims[TokenTypeClaimName] = RefreshTokenType
 	return r
 }
+
+// Getters
 
 func (r *RawJWT) DID() (res string, ok bool) {
 	var val interface{}

@@ -28,7 +28,7 @@ func CtxJWT(issuer *jwt.JWTIssuer) func(context.Context) context.Context {
 	}
 }
 
-func CtxClaim(claim *AuthClaim) func(context.Context) context.Context {
+func CtxClaim(claim *jwt.AuthClaim) func(context.Context) context.Context {
 	return func(ctx context.Context) context.Context {
 		return context.WithValue(ctx, claimKey, claim)
 	}
@@ -42,6 +42,6 @@ func JWT(r *http.Request) *jwt.JWTIssuer {
 	return r.Context().Value(jwtKey).(*jwt.JWTIssuer)
 }
 
-func Claim(r *http.Request) *AuthClaim {
-	return r.Context().Value(claimKey).(*AuthClaim)
+func Claim(r *http.Request) *jwt.AuthClaim {
+	return r.Context().Value(claimKey).(*jwt.AuthClaim)
 }

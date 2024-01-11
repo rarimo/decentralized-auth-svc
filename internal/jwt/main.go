@@ -19,14 +19,14 @@ type JWTIssuer struct {
 	refreshExpiration time.Duration
 }
 
-func (i *JWTIssuer) IssueJWT(userDID, orgDID string, role int32, group *int32, typ TokenType) (string, error) {
+func (i *JWTIssuer) IssueJWT(claim *AuthClaim) (string, error) {
 	raw := (&RawJWT{make(jwt.MapClaims)}).
-		SetDID(userDID).
-		SetOrgDID(orgDID).
-		SetRole(role).
-		SetGroup(group)
+		SetDID(claim.UserDID).
+		SetOrgDID(claim.OrgDID).
+		SetRole(claim.Role).
+		SetGroup(claim.Group)
 
-	switch typ {
+	switch claim.Type {
 	case AccessTokenType:
 		raw.
 			SetTokenAccess().
@@ -40,7 +40,7 @@ func (i *JWTIssuer) IssueJWT(userDID, orgDID string, role int32, group *int32, t
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, raw.claims).SignedString(i.prv)
 }
 
-func (i *JWTIssuer) ValidateJWT(str string) (did, org string, role int32, group *int32, typ TokenType, err error) {
+func (i *JWTIssuer) ValidateJWT(str string) (claim *AuthClaim, err error) {
 	var token *jwt.Token
 
 	key := func(token *jwt.Token) (interface{}, error) {
@@ -64,30 +64,30 @@ func (i *JWTIssuer) ValidateJWT(str string) (did, org string, role int32, group 
 		return
 	}
 
-	did, ok = raw.DID()
+	claim.UserDID, ok = raw.DID()
 	if !ok {
 		err = errors.New("invalid did: failed to parse")
 		return
 	}
 
-	org, ok = raw.OrgDID()
+	claim.OrgDID, ok = raw.OrgDID()
 	if !ok {
 		err = errors.New("invalid did: failed to parse")
 		return
 	}
 
-	role, ok = raw.Role()
+	claim.Role, ok = raw.Role()
 	if !ok {
 		err = errors.New("invalid role: failed to parse")
 		return
 	}
 
-	typ, ok = raw.TokenType()
+	claim.Type, ok = raw.TokenType()
 	if !ok {
 		err = errors.New("invalid token type: failed to parse")
 		return
 	}
 
-	group = raw.Group()
+	claim.Group = raw.Group()
 	return
 }

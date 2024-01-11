@@ -22,11 +22,13 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 	}
 
 	access, err := JWT(r).IssueJWT(
-		claim.UserDID,
-		claim.OrgDID,
-		claim.Role,
-		claim.Group,
-		jwt.AccessTokenType,
+		&jwt.AuthClaim{
+			OrgDID:  claim.OrgDID,
+			UserDID: claim.UserDID,
+			Role:    claim.Role,
+			Group:   claim.Group,
+			Type:    jwt.AccessTokenType,
+		},
 	)
 
 	if err != nil {
@@ -36,11 +38,13 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 	}
 
 	refresh, err := JWT(r).IssueJWT(
-		claim.UserDID,
-		claim.OrgDID,
-		claim.Role,
-		claim.Group,
-		jwt.RefreshTokenType,
+		&jwt.AuthClaim{
+			OrgDID:  claim.OrgDID,
+			UserDID: claim.UserDID,
+			Role:    claim.Role,
+			Group:   claim.Group,
+			Type:    jwt.RefreshTokenType,
+		},
 	)
 
 	if err != nil {
