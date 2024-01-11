@@ -18,4 +18,4 @@ properties:
   proof:
     type: object
     format: json.RawMessage
-    description: JSON encoded ZK proof (MTPV2OnChain) the user own a credential with Hash(role, groups). If group is not provided then Hash(role).
+    description: JSON encoded ZK proof (MTPV2OffChain) the user own a credential with Hash(role, groups). If group is not provided then Hash(role).
