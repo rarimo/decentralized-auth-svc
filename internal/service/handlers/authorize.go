@@ -16,6 +16,7 @@ import (
 func Authorize(w http.ResponseWriter, r *http.Request) {
 	req, err := requests.NewAuthorizeRequest(r)
 	if err != nil {
+		Log(r).WithError(err).Debug("failed to parse request")
 		ape.RenderErr(w, problems.BadRequest(err)...)
 		return
 	}

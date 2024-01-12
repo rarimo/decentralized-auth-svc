@@ -23,8 +23,8 @@ func (s *service) router() chi.Router {
 	r.Route("/integrations/rarime-auth-svc", func(r chi.Router) {
 		r.Route("/v1", func(r chi.Router) {
 			r.Post("/authorize", handlers.Authorize)
-			r.With(middleware.AuthMiddleware(s.jwt)).Get("/validate", handlers.Validate)
-			r.With(middleware.AuthMiddleware(s.jwt)).Get("/refresh", handlers.Refresh)
+			r.With(middleware.AuthMiddleware(s.jwt, s.log)).Get("/validate", handlers.Validate)
+			r.With(middleware.AuthMiddleware(s.jwt, s.log)).Get("/refresh", handlers.Refresh)
 		})
 	})
 
