@@ -16,15 +16,10 @@ const (
 
 type Client struct {
 	*http.Client
-	Addr    string
-	Enabled bool
+	Addr string
 }
 
 func (a *Client) ValidateJWT(headers http.Header) (claims []resources.Claim, code int, err error) {
-	if !a.Enabled {
-		return []resources.Claim{}, 200, nil
-	}
-
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s", a.Addr, FullValidatePath), nil)
 	if err != nil {
 		return nil, http.StatusInternalServerError, errors.Wrap(err, "failed to create request")
