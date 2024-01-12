@@ -18,3 +18,9 @@ func GroupRoleGrant(userDID, orgDID string, role int32, group int32) Grant {
 			claim.Role == role
 	}
 }
+
+func UserGrant(userDID string) Grant {
+	return func(claim resources.Claim) bool {
+		return claim.User == userDID
+	}
+}
