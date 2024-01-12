@@ -64,6 +64,8 @@ func (i *JWTIssuer) ValidateJWT(str string) (claim *AuthClaim, err error) {
 		return
 	}
 
+	claim = &AuthClaim{}
+
 	claim.UserDID, ok = raw.DID()
 	if !ok {
 		err = errors.New("invalid did: failed to parse")
