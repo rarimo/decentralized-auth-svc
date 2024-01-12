@@ -9,3 +9,7 @@ jwt:
   secret_key: 0x..
   access_expiration_time: 12h
   refresh_expiration_time: 30d
+
+verifier:
+  schema: 12345
+  enabled: false

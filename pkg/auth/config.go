@@ -7,22 +7,22 @@ import (
 	"gitlab.com/distributed_lab/kit/kv"
 )
 
-type Clienter interface {
-	Client() *Client
+type Auther interface {
+	Auth() *Client
 }
 
-func NewClienter(getter kv.Getter) Clienter {
-	return &clienter{
+func NewAuther(getter kv.Getter) Auther {
+	return &auther{
 		getter: getter,
 	}
 }
 
-type clienter struct {
+type auther struct {
 	once   comfig.Once
 	getter kv.Getter
 }
 
-func (c *clienter) Client() *Client {
+func (c *auther) Auth() *Client {
 	return c.once.Do(func() interface{} {
 		var cfg = struct {
 			Addr    string `fig:"addr,required"`

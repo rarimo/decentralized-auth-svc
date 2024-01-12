@@ -16,6 +16,7 @@ func (s *service) router() chi.Router {
 		ape.CtxMiddleware(
 			handlers.CtxLog(s.log),
 			handlers.CtxJWT(s.jwt),
+			handlers.CtxVerifier(s.verifier),
 		),
 	)
 

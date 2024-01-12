@@ -8,7 +8,6 @@ import (
 	zkptypes "github.com/iden3/go-rapidsnark/types"
 	"github.com/rarimo/rarime-auth-svc/internal/jwt"
 	"github.com/rarimo/rarime-auth-svc/internal/service/requests"
-	"github.com/rarimo/rarime-auth-svc/internal/zkp"
 	"github.com/rarimo/rarime-auth-svc/resources"
 	"gitlab.com/distributed_lab/ape"
 	"gitlab.com/distributed_lab/ape/problems"
@@ -21,33 +20,35 @@ func Authorize(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var proof zkptypes.ZKProof
-	if err := json.Unmarshal(req.Data.Attributes.Proof.Proof, &proof); err != nil {
-		ape.RenderErr(w, problems.BadRequest(err)...)
-		return
-	}
+	if Verifier(r).Enabled {
+		var proof zkptypes.ZKProof
+		if err := json.Unmarshal(req.Data.Attributes.Proof.Proof, &proof); err != nil {
+			ape.RenderErr(w, problems.BadRequest(err)...)
+			return
+		}
 
-	orgDID, err := core.ParseDID(req.Data.Attributes.Proof.Issuer)
-	if err != nil {
-		ape.RenderErr(w, problems.BadRequest(err)...)
-		return
-	}
+		orgDID, err := core.ParseDID(req.Data.Attributes.Proof.Issuer)
+		if err != nil {
+			ape.RenderErr(w, problems.BadRequest(err)...)
+			return
+		}
 
-	userDID, err := core.ParseDID(req.Data.ID)
-	if err != nil {
-		ape.RenderErr(w, problems.BadRequest(err)...)
-		return
-	}
+		userDID, err := core.ParseDID(req.Data.ID)
+		if err != nil {
+			ape.RenderErr(w, problems.BadRequest(err)...)
+			return
+		}
 
-	if err := zkp.VerifyProof(
-		orgDID.ID.BigInt().String(),
-		userDID.ID.BigInt().String(),
-		req.Data.Attributes.Proof.Role,
-		req.Data.Attributes.Proof.Group,
-		&proof,
-	); err != nil {
-		ape.RenderErr(w, problems.Unauthorized())
-		return
+		if err := Verifier(r).VerifyProof(
+			orgDID.ID.BigInt().String(),
+			userDID.ID.BigInt().String(),
+			req.Data.Attributes.Proof.Role,
+			req.Data.Attributes.Proof.Group,
+			&proof,
+		); err != nil {
+			ape.RenderErr(w, problems.Unauthorized())
+			return
+		}
 	}
 
 	access, err := JWT(r).IssueJWT(

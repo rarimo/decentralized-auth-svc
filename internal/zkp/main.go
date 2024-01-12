@@ -42,7 +42,6 @@ const (
 
 const (
 	OperatorValue = "2"
-	SchemaValue   = "" // TODO specify or move to cfg
 )
 
 const (
@@ -58,14 +57,23 @@ func init() {
 	}
 }
 
+type Verifier struct {
+	Enabled bool
+	Schema  string
+}
+
 // VerifyProof performs ZK Groth16 proof verification based on specified verification key and hardcoded/passed parameters.
-func VerifyProof(issuer string, user string, role int32, group *int32, proof *zkptypes.ZKProof) error {
+func (v *Verifier) VerifyProof(issuer string, user string, role int32, group *int32, proof *zkptypes.ZKProof) error {
+	if !v.Enabled {
+		return nil
+	}
+
 	if err := verifyTimestamp(proof.PubSignals[TimestampSignalsIndex]); err != nil {
 		return err
 	}
 
 	proof.PubSignals[OperatorSignalsIndex] = OperatorValue
-	proof.PubSignals[SchemaSignalsIndex] = SchemaValue
+	proof.PubSignals[SchemaSignalsIndex] = v.Schema
 	proof.PubSignals[IssuerIdSignalsIndex] = issuer
 	proof.PubSignals[UserIdSignalsIndex] = user
 	proof.PubSignals[ValueSignalsIndex] = new(big.Int).SetBytes(pkg.GetRoleHash(role, group)).String()
