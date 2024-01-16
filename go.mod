@@ -7,11 +7,13 @@ require (
 	github.com/ethereum/go-ethereum v1.13.8
 	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/golang-jwt/jwt/v5 v5.2.0
+	github.com/google/uuid v1.3.0
 	github.com/iden3/go-iden3-core v1.0.2
 	github.com/iden3/go-rapidsnark/types v0.0.3
 	github.com/iden3/go-rapidsnark/verifier v0.0.5
 	github.com/pkg/errors v0.9.1
 	gitlab.com/distributed_lab/ape v1.7.1
+	gitlab.com/distributed_lab/figure v2.1.0+incompatible
 	gitlab.com/distributed_lab/kit v1.11.2
 	gitlab.com/distributed_lab/logan v3.8.1+incompatible
 	gotest.tools v2.2.0+incompatible
@@ -44,7 +46,6 @@ require (
 	github.com/spf13/jwalterweatherman v1.0.0 // indirect
 	github.com/spf13/pflag v1.0.3 // indirect
 	github.com/spf13/viper v1.3.2 // indirect
-	gitlab.com/distributed_lab/figure v2.1.0+incompatible // indirect
 	gitlab.com/distributed_lab/lorem v0.2.0 // indirect
 	golang.org/x/crypto v0.17.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect

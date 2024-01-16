@@ -6,6 +6,7 @@ import (
 	"time"
 
 	jwt "github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 const (
@@ -28,8 +29,8 @@ var (
 type AuthClaim struct {
 	OrgDID  string
 	UserDID string
-	Role    int32
-	Group   *int32
+	Role    uint32
+	Group   *uuid.UUID
 	Type    TokenType
 }
 
@@ -50,14 +51,14 @@ func (r *RawJWT) SetExpirationTimestamp(expiration time.Duration) *RawJWT {
 	return r
 }
 
-func (r *RawJWT) SetRole(role int32) *RawJWT {
+func (r *RawJWT) SetRole(role uint32) *RawJWT {
 	r.claims[RoleClaimName] = fmt.Sprint(role)
 	return r
 }
 
-func (r *RawJWT) SetGroup(group *int32) *RawJWT {
+func (r *RawJWT) SetGroup(group *uuid.UUID) *RawJWT {
 	if group != nil {
-		r.claims[GroupClaimName] = fmt.Sprint(*group)
+		r.claims[GroupClaimName] = group.String()
 	}
 	return r
 }
@@ -90,7 +91,7 @@ func (r *RawJWT) DID() (res string, ok bool) {
 	return
 }
 
-func (r *RawJWT) Role() (role int32, ok bool) {
+func (r *RawJWT) Role() (role uint32, ok bool) {
 	var (
 		val    interface{}
 		number string
@@ -109,31 +110,30 @@ func (r *RawJWT) Role() (role int32, ok bool) {
 		return 0, false
 	}
 
-	return int32(num), true
+	return uint32(num), true
 }
 
-func (r *RawJWT) Group() *int32 {
+func (r *RawJWT) Group() *uuid.UUID {
 	var (
-		val    interface{}
-		number string
-		ok     bool
+		val interface{}
+		str string
+		ok  bool
 	)
 
 	if val, ok = r.claims[GroupClaimName]; !ok {
 		return nil
 	}
 
-	if number, ok = val.(string); !ok {
+	if str, ok = val.(string); !ok {
 		return nil
 	}
 
-	num, err := strconv.ParseInt(number, 10, 64)
+	u, err := uuid.Parse(str)
 	if err != nil {
 		return nil
 	}
 
-	x := int32(num)
-	return &x
+	return &u
 }
 
 func (r *RawJWT) OrgDID() (did string, ok bool) {

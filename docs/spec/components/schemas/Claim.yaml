@@ -15,7 +15,10 @@ properties:
     description: User DID authorized with
   role:
     type: integer
+    format: uint32
     description: User role id authorized with
   group:
-    type: integer
+    type: string
+    format: uuid.UUID
+    example: "3a798290-caf1-496a-a7e5-4db32551b13d"
     description: User group id authorized with

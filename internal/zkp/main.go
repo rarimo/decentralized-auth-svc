@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/google/uuid"
 	zkptypes "github.com/iden3/go-rapidsnark/types"
 	"github.com/iden3/go-rapidsnark/verifier"
 	"github.com/rarimo/rarime-auth-svc/pkg"
@@ -63,7 +64,7 @@ type Verifier struct {
 }
 
 // VerifyProof performs ZK Groth16 proof verification based on specified verification key and hardcoded/passed parameters.
-func (v *Verifier) VerifyProof(issuer string, user string, role int32, group *int32, proof *zkptypes.ZKProof) error {
+func (v *Verifier) VerifyProof(issuer string, user string, role uint32, group *uuid.UUID, proof *zkptypes.ZKProof) error {
 	if !v.Enabled {
 		return nil
 	}
