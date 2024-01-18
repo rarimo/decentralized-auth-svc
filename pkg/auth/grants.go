@@ -29,9 +29,10 @@ func GlobalRoleGrant(orgDID string, role uint32) Grant {
 	}
 }
 
-func RoleGrant(orgDID string, role uint32) Grant {
+func RoleGrant(orgDID string, role uint32, group uuid.UUID) Grant {
 	return func(claim resources.Claim) bool {
-		return claim.Role == role &&
+		return claim.Group != nil && *claim.Group == group &&
+			claim.Role == role &&
 			claim.Org == orgDID
 	}
 }
