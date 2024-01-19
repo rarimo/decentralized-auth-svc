@@ -42,3 +42,15 @@ func UserGrant(userDID string) Grant {
 		return claim.User == userDID
 	}
 }
+
+func GroupGrant(group uuid.UUID) Grant {
+	return func(claim resources.Claim) bool {
+		return claim.Group != nil && *claim.Group == group
+	}
+}
+
+func OrgGrant(orgDID string) Grant {
+	return func(claim resources.Claim) bool {
+		return claim.Org == orgDID
+	}
+}
