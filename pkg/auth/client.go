@@ -29,7 +29,7 @@ func (a *Client) ValidateJWT(headers http.Header) (claims []resources.Claim, cod
 
 	resp, err := a.Do(req)
 	if err != nil {
-		return nil, resp.StatusCode, errors.Wrap(err, "failed to execute validate request")
+		return nil, http.StatusUnauthorized, errors.Wrap(err, "failed to execute validate request")
 	}
 
 	defer resp.Body.Close()
