@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"net/http"
+
 	"github.com/pkg/errors"
 	"gitlab.com/distributed_lab/figure"
 	"gitlab.com/distributed_lab/kit/comfig"
@@ -41,7 +43,8 @@ func (c *auther) Auth() *Client {
 		}
 
 		return &Client{
-			Addr: cfg.Addr,
+			Client: &http.Client{},
+			Addr:   cfg.Addr,
 		}
 	}).(*Client)
 }
