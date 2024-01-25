@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/rarimo/rarime-auth-svc/internal/jwt"
@@ -10,10 +11,23 @@ import (
 )
 
 func Validate(w http.ResponseWriter, r *http.Request) {
-	claim := Claim(r)
-	if claim == nil {
+	cookie, err := r.Cookie(jwt.AccessTokenType.String())
+	if err != nil {
 		ape.RenderErr(w, problems.Unauthorized())
 		return
+	}
+	var claim *jwt.AuthClaim
+	if err := json.Unmarshal([]byte(cookie.Value), claim); err != nil {
+		ape.RenderErr(w, problems.Unauthorized())
+		return
+	}
+
+	if claim == nil {
+		claim = Claim(r)
+		if claim == nil {
+			ape.RenderErr(w, problems.Unauthorized())
+			return
+		}
 	}
 
 	if claim.Type != jwt.AccessTokenType {

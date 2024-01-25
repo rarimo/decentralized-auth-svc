@@ -103,5 +103,6 @@ func Authorize(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
+	jwt.SetTokensCookies(w, access, refresh)
 	ape.Render(w, resp)
 }

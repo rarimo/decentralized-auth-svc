@@ -20,6 +20,10 @@ const (
 
 type TokenType string
 
+func (t TokenType) String() string {
+	return string(t)
+}
+
 var (
 	AccessTokenType  TokenType = "access"
 	RefreshTokenType TokenType = "refresh"

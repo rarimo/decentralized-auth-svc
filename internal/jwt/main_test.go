@@ -3,6 +3,7 @@ package jwt
 import (
 	"crypto/rand"
 	"fmt"
+	"github.com/google/uuid"
 	"testing"
 	"time"
 
@@ -21,9 +22,9 @@ func TestGeneratePrivateKey(t *testing.T) {
 
 func TestJWT(t *testing.T) {
 	var (
-		val    int32  = 5
-		role1  int32  = 10
-		group1 *int32 = &val
+		val           = uuid.New()
+		role1  uint32 = 10
+		group1        = &val
 	)
 
 	issuer := JWTIssuer{
