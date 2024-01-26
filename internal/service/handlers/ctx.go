@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/rarimo/rarime-auth-svc/internal/cookies"
 	"github.com/rarimo/rarime-auth-svc/internal/jwt"
 	"github.com/rarimo/rarime-auth-svc/internal/zkp"
 	"gitlab.com/distributed_lab/logan/v3"
@@ -16,6 +17,7 @@ const (
 	jwtKey
 	claimKey
 	verifierKey
+	cookiesKey
 )
 
 func CtxLog(entry *logan.Entry) func(context.Context) context.Context {
@@ -42,6 +44,12 @@ func CtxVerifier(verifier *zkp.Verifier) func(context.Context) context.Context {
 	}
 }
 
+func CtxCookies(cookies *cookies.Cookies) func(context.Context) context.Context {
+	return func(ctx context.Context) context.Context {
+		return context.WithValue(ctx, cookiesKey, cookies)
+	}
+}
+
 func Log(r *http.Request) *logan.Entry {
 	return r.Context().Value(logCtxKey).(*logan.Entry)
 }
@@ -56,4 +64,8 @@ func Claim(r *http.Request) *jwt.AuthClaim {
 
 func Verifier(r *http.Request) *zkp.Verifier {
 	return r.Context().Value(verifierKey).(*zkp.Verifier)
+}
+
+func Cookies(r *http.Request) *cookies.Cookies {
+	return r.Context().Value(cookiesKey).(*cookies.Cookies)
 }

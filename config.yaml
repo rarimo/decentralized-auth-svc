@@ -10,6 +10,9 @@ jwt:
   access_expiration_time: 12h
   refresh_expiration_time: 24h
 
+cookies:
+  domain: "rarime.com"
+
 verifier:
   schema: 12345
   enabled: false

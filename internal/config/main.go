@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/rarimo/rarime-auth-svc/internal/cookies"
 	"github.com/rarimo/rarime-auth-svc/internal/jwt"
 	"github.com/rarimo/rarime-auth-svc/internal/zkp"
 	"gitlab.com/distributed_lab/kit/comfig"
@@ -12,6 +13,7 @@ type Config interface {
 	comfig.Listenerer
 	jwt.Jwter
 	zkp.Verifierer
+	cookies.Cookier
 }
 
 type config struct {
@@ -19,6 +21,7 @@ type config struct {
 	comfig.Listenerer
 	jwt.Jwter
 	zkp.Verifierer
+	cookies.Cookier
 	getter kv.Getter
 }
 
@@ -29,5 +32,6 @@ func New(getter kv.Getter) Config {
 		Logger:     comfig.NewLogger(getter, comfig.LoggerOpts{}),
 		Jwter:      jwt.NewJwter(getter),
 		Verifierer: zkp.NewVerifierer(getter),
+		Cookier:    cookies.NewCookier(getter),
 	}
 }

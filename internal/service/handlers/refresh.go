@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/rarimo/rarime-auth-svc/internal/cookies"
 	"github.com/rarimo/rarime-auth-svc/internal/jwt"
 	"github.com/rarimo/rarime-auth-svc/resources"
 	"gitlab.com/distributed_lab/ape"
@@ -11,23 +11,10 @@ import (
 )
 
 func Refresh(w http.ResponseWriter, r *http.Request) {
-	cookie, err := r.Cookie(jwt.RefreshTokenType.String())
-	if err != nil {
-		ape.RenderErr(w, problems.Unauthorized())
-		return
-	}
-	var claim *jwt.AuthClaim
-	if err := json.Unmarshal([]byte(cookie.Value), claim); err != nil {
-		ape.RenderErr(w, problems.Unauthorized())
-		return
-	}
-
+	claim := Claim(r)
 	if claim == nil {
-		claim = Claim(r)
-		if claim == nil {
-			ape.RenderErr(w, problems.Unauthorized())
-			return
-		}
+		ape.RenderErr(w, problems.Unauthorized())
+		return
 	}
 
 	if claim.Type != jwt.RefreshTokenType {
@@ -86,6 +73,6 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	jwt.SetTokensCookies(w, access, refresh)
+	cookies.SetTokensCookies(w, access, refresh, Cookies(r).Domain)
 	ape.Render(w, resp)
 }

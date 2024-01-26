@@ -17,6 +17,7 @@ func (s *service) router() chi.Router {
 			handlers.CtxLog(s.log),
 			handlers.CtxJWT(s.jwt),
 			handlers.CtxVerifier(s.verifier),
+			handlers.CtxCookies(s.cookies),
 		),
 	)
 

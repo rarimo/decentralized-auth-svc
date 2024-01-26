@@ -14,11 +14,23 @@ import (
 func AuthMiddleware(issuer *jwt.JWTIssuer, log *logan.Entry) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			token, err := pkg.GetBearer(r)
-			if err != nil {
-				log.WithError(err).Debug("failed to get bearer token")
+			cookie, err := r.Cookie(jwt.AccessTokenType.String())
+			if err != nil && err != http.ErrNoCookie {
+				log.WithError(err).Debug("failed to get access cookie")
 				ape.RenderErr(w, problems.Unauthorized())
 				return
+			}
+
+			var token string
+			if cookie != nil {
+				token = cookie.Value
+			} else {
+				token, err = pkg.GetBearer(r)
+				if err != nil {
+					log.WithError(err).Debug("failed to get bearer token")
+					ape.RenderErr(w, problems.Unauthorized())
+					return
+				}
 			}
 
 			claim, err := issuer.ValidateJWT(token)

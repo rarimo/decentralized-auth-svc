@@ -6,6 +6,7 @@ import (
 
 	core "github.com/iden3/go-iden3-core"
 	zkptypes "github.com/iden3/go-rapidsnark/types"
+	"github.com/rarimo/rarime-auth-svc/internal/cookies"
 	"github.com/rarimo/rarime-auth-svc/internal/jwt"
 	"github.com/rarimo/rarime-auth-svc/internal/service/requests"
 	"github.com/rarimo/rarime-auth-svc/resources"
@@ -103,6 +104,6 @@ func Authorize(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	jwt.SetTokensCookies(w, access, refresh)
+	cookies.SetTokensCookies(w, access, refresh, Cookies(r).Domain)
 	ape.Render(w, resp)
 }

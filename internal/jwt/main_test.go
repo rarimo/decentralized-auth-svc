@@ -3,11 +3,11 @@ package jwt
 import (
 	"crypto/rand"
 	"fmt"
-	"github.com/google/uuid"
 	"testing"
 	"time"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/google/uuid"
 	"gotest.tools/assert"
 )
 
