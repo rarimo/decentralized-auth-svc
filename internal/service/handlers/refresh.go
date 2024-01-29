@@ -72,5 +72,6 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
+	Cookies(r).SetTokensCookies(w, access, refresh)
 	ape.Render(w, resp)
 }

@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/rarimo/rarime-auth-svc/internal/config"
+	"github.com/rarimo/rarime-auth-svc/internal/cookies"
 	"github.com/rarimo/rarime-auth-svc/internal/jwt"
 	"github.com/rarimo/rarime-auth-svc/internal/zkp"
 	"gitlab.com/distributed_lab/logan/v3"
@@ -15,6 +16,7 @@ type service struct {
 	listener net.Listener
 	jwt      *jwt.JWTIssuer
 	verifier *zkp.Verifier
+	cookies  *cookies.Cookies
 }
 
 func (s *service) run() error {
@@ -29,6 +31,7 @@ func newService(cfg config.Config) *service {
 		listener: cfg.Listener(),
 		jwt:      cfg.JWT(),
 		verifier: cfg.Verifier(),
+		cookies:  cfg.Cookies(),
 	}
 }
 

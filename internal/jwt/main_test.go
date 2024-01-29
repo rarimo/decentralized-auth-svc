@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/google/uuid"
 	"gotest.tools/assert"
 )
 
@@ -21,9 +22,9 @@ func TestGeneratePrivateKey(t *testing.T) {
 
 func TestJWT(t *testing.T) {
 	var (
-		val    int32  = 5
-		role1  int32  = 10
-		group1 *int32 = &val
+		val           = uuid.New()
+		role1  uint32 = 10
+		group1        = &val
 	)
 
 	issuer := JWTIssuer{
