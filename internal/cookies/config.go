@@ -26,6 +26,7 @@ func (j *cookier) Cookies() *Cookies {
 	return j.once.Do(func() interface{} {
 		cfg := struct {
 			Domain string `fig:"domain,required"`
+			Secure bool   `fig:"secure,required"`
 		}{}
 		err := figure.
 			Out(&cfg).
@@ -38,6 +39,7 @@ func (j *cookier) Cookies() *Cookies {
 
 		return &Cookies{
 			Domain: cfg.Domain,
+			Secure: cfg.Secure,
 		}
 	}).(*Cookies)
 }

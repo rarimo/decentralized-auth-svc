@@ -12,6 +12,7 @@ jwt:
 
 cookies:
   domain: "rarime.com"
+  secure: true
 
 verifier:
   schema: 12345

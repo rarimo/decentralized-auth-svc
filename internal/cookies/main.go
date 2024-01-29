@@ -7,18 +7,19 @@ import (
 )
 
 type Cookies struct {
-	Domain string `fig:"domain.required"`
+	Domain string
+	Secure bool
 }
 
-func SetTokensCookies(w http.ResponseWriter, access, refresh, domain string) {
+func (c *Cookies) SetTokensCookies(w http.ResponseWriter, access, refresh string) {
 	refreshCookie := &http.Cookie{
 		Name:     jwt.RefreshTokenType.String(),
 		Value:    refresh,
 		Path:     "/",
 		HttpOnly: true,
-		Secure:   false,
+		Secure:   c.Secure,
 		SameSite: http.SameSiteLaxMode,
-		Domain:   domain,
+		Domain:   c.Domain,
 	}
 
 	http.SetCookie(w, refreshCookie)
@@ -28,24 +29,24 @@ func SetTokensCookies(w http.ResponseWriter, access, refresh, domain string) {
 		Value:    access,
 		Path:     "/",
 		HttpOnly: true,
-		Secure:   false,
+		Secure:   c.Secure,
 		SameSite: http.SameSiteLaxMode,
-		Domain:   domain,
+		Domain:   c.Domain,
 	}
 
 	http.SetCookie(w, accessCookie)
 }
 
-func ClearTokensCookies(w http.ResponseWriter, domain string) {
+func (c *Cookies) ClearTokensCookies(w http.ResponseWriter) {
 	refreshCookie := &http.Cookie{
 		Name:     jwt.RefreshTokenType.String(),
 		Value:    "",
 		Path:     "/",
 		HttpOnly: true,
-		Secure:   false,
+		Secure:   c.Secure,
 		MaxAge:   -1,
 		SameSite: http.SameSiteLaxMode,
-		Domain:   domain,
+		Domain:   c.Domain,
 	}
 
 	http.SetCookie(w, refreshCookie)
@@ -55,10 +56,10 @@ func ClearTokensCookies(w http.ResponseWriter, domain string) {
 		Value:    "",
 		Path:     "/",
 		HttpOnly: true,
-		Secure:   false,
+		Secure:   c.Secure,
 		MaxAge:   -1,
 		SameSite: http.SameSiteLaxMode,
-		Domain:   domain,
+		Domain:   c.Domain,
 	}
 
 	http.SetCookie(w, accessCookie)

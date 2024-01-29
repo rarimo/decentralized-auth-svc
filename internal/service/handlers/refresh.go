@@ -3,7 +3,6 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/rarimo/rarime-auth-svc/internal/cookies"
 	"github.com/rarimo/rarime-auth-svc/internal/jwt"
 	"github.com/rarimo/rarime-auth-svc/resources"
 	"gitlab.com/distributed_lab/ape"
@@ -73,6 +72,6 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	cookies.SetTokensCookies(w, access, refresh, Cookies(r).Domain)
+	Cookies(r).SetTokensCookies(w, access, refresh)
 	ape.Render(w, resp)
 }

@@ -11,18 +11,15 @@ import (
 	"gitlab.com/distributed_lab/logan/v3"
 )
 
-func AuthMiddleware(issuer *jwt.JWTIssuer, log *logan.Entry) func(http.Handler) http.Handler {
+func AuthMiddleware(issuer *jwt.JWTIssuer, log *logan.Entry, tokenType jwt.TokenType) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			cookie, err := r.Cookie(jwt.AccessTokenType.String())
-			if err != nil && err != http.ErrNoCookie {
-				log.WithError(err).Debug("failed to get access cookie")
-				ape.RenderErr(w, problems.Unauthorized())
-				return
-			}
+			var (
+				token string
+				err   error
+			)
 
-			var token string
-			if cookie != nil {
+			if cookie, err := r.Cookie(tokenType.String()); err == nil {
 				token = cookie.Value
 			} else {
 				token, err = pkg.GetBearer(r)
