@@ -25,6 +25,7 @@ func (s *service) router() chi.Router {
 	r.Route("/integrations/rarime-auth-svc", func(r chi.Router) {
 		r.Route("/v1", func(r chi.Router) {
 			r.Post("/authorize", handlers.Authorize)
+			r.Get("/authorize/{did}/challenge", handlers.RequestChallenge)
 			r.With(middleware.AuthMiddleware(s.jwt, s.log, jwt.AccessTokenType)).Get("/validate", handlers.Validate)
 			r.With(middleware.AuthMiddleware(s.jwt, s.log, jwt.RefreshTokenType)).Get("/refresh", handlers.Refresh)
 		})

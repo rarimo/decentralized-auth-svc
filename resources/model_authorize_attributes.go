@@ -4,6 +4,9 @@
 
 package resources
 
+import "encoding/json"
+
 type AuthorizeAttributes struct {
-	Proof *Proof `json:"proof,omitempty"`
+	// JSON encoded ZK proof AuthV2 proof.
+	Proof json.RawMessage `json:"proof"`
 }

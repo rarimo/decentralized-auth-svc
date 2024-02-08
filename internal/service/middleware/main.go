@@ -14,20 +14,11 @@ import (
 func AuthMiddleware(issuer *jwt.JWTIssuer, log *logan.Entry, tokenType jwt.TokenType) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			var (
-				token string
-				err   error
-			)
-
-			if cookie, err := r.Cookie(tokenType.String()); err == nil {
-				token = cookie.Value
-			} else {
-				token, err = pkg.GetBearer(r)
-				if err != nil {
-					log.WithError(err).Debug("failed to get bearer token")
-					ape.RenderErr(w, problems.Unauthorized())
-					return
-				}
+			token, err := pkg.GetToken(r, tokenType)
+			if err != nil {
+				log.WithError(err).Debug("failed to get token")
+				ape.RenderErr(w, problems.Unauthorized())
+				return
 			}
 
 			claim, err := issuer.ValidateJWT(token)
@@ -37,8 +28,7 @@ func AuthMiddleware(issuer *jwt.JWTIssuer, log *logan.Entry, tokenType jwt.Token
 				return
 			}
 
-			ctx := handlers.CtxClaim(claim)(r.Context())
-			next.ServeHTTP(w, r.WithContext(ctx))
+			next.ServeHTTP(w, r.WithContext(handlers.CtxClaim(claim)(r.Context())))
 		})
 	}
 }

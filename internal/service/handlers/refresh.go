@@ -21,12 +21,9 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	access, err := JWT(r).IssueJWT(
+	access, aexp, err := JWT(r).IssueJWT(
 		&jwt.AuthClaim{
-			OrgDID:  claim.OrgDID,
 			UserDID: claim.UserDID,
-			Role:    claim.Role,
-			Group:   claim.Group,
 			Type:    jwt.AccessTokenType,
 		},
 	)
@@ -37,12 +34,9 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	refresh, err := JWT(r).IssueJWT(
+	refresh, rexp, err := JWT(r).IssueJWT(
 		&jwt.AuthClaim{
-			OrgDID:  claim.OrgDID,
 			UserDID: claim.UserDID,
-			Role:    claim.Role,
-			Group:   claim.Group,
 			Type:    jwt.RefreshTokenType,
 		},
 	)
@@ -72,6 +66,7 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	Cookies(r).SetTokensCookies(w, access, refresh)
+	Cookies(r).SetAccessToken(w, access, aexp)
+	Cookies(r).SetRefreshToken(w, refresh, rexp)
 	ape.Render(w, resp)
 }

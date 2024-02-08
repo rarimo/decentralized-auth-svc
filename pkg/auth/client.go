@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/rarimo/rarime-auth-svc/internal/jwt"
+	"github.com/rarimo/rarime-auth-svc/pkg"
 	"github.com/rarimo/rarime-auth-svc/resources"
 	"gitlab.com/distributed_lab/logan/v3/errors"
 )
@@ -19,13 +20,18 @@ type Client struct {
 	Addr string
 }
 
-func (a *Client) ValidateJWT(headers http.Header) (claims []resources.Claim, err error) {
+func (a *Client) ValidateJWT(r *http.Request) (claims []resources.Claim, err error) {
+	token, err := pkg.GetToken(r, jwt.AccessTokenType)
+	if err != nil {
+		return nil, err
+	}
+
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s", a.Addr, FullValidatePath), nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create request")
 	}
 
-	req.Header.Set(jwt.AuthorizationHeaderName, headers.Get(jwt.AuthorizationHeaderName))
+	pkg.SetBearer(req, token)
 
 	resp, err := a.Do(req)
 	if err != nil {

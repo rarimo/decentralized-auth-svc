@@ -2,11 +2,7 @@ description: 'JWT token'
 type: object
 required:
   - token
-  - expiredAt
   - tokenType
-  - userDID
-  - orgDID
-  - role
 properties:
   token:
     type: string

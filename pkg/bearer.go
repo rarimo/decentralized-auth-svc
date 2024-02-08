@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -21,4 +22,29 @@ func GetBearer(r *http.Request) (string, error) {
 	}
 
 	return authHeaderSplit[1], nil
+}
+
+func SetBearer(r *http.Request, token string) {
+	r.Header.Set(jwt.AuthorizationHeaderName, fmt.Sprintf("%s %s", jwt.BearerTokenPrefix, token))
+}
+
+func GetCookie(r *http.Request, typ jwt.TokenType) (string, error) {
+	cookie, err := r.Cookie(typ.String())
+	if err != nil {
+		return "", ErrInvalidToken
+	}
+
+	return cookie.Value, nil
+}
+
+func GetToken(r *http.Request, typ jwt.TokenType) (string, error) {
+	if token, err := GetBearer(r); err == nil {
+		return token, nil
+	}
+
+	if token, err := GetCookie(r, typ); err == nil {
+		return token, nil
+	}
+
+	return "", ErrInvalidToken
 }

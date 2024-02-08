@@ -1,0 +1,14 @@
+allOf:
+  - $ref: '#/components/schemas/UserKey'
+  - type: object
+    required:
+      - attributes
+    properties:
+      attributes:
+        required:
+          - challenge
+        properties:
+          challenge:
+            type: string
+            description: Base64 encoded challenge. Use it to generate AuthV2 ZK proof. Decode base64 string and convert into big-endian decimal number.
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

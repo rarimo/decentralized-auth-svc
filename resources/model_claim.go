@@ -4,18 +4,10 @@
 
 package resources
 
-import (
-	"github.com/google/uuid"
-)
-
 // Authorized user personal data
 type Claim struct {
-	// User group id authorized with
-	Group *uuid.UUID `json:"group,omitempty"`
-	// Organization DID authorized with
-	Org string `json:"org"`
-	// User role id authorized with
-	Role uint32 `json:"role"`
+	// User EVM address hex-encoded
+	Address *string `json:"address,omitempty"`
 	// User DID authorized with
 	User string `json:"user"`
 }

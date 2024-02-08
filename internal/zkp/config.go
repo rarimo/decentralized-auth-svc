@@ -41,8 +41,9 @@ func (v *verifierer) Verifier() *Verifier {
 		}
 
 		return &Verifier{
-			Enabled: cfg.Enabled,
-			Schema:  cfg.Schema,
+			Enabled:    cfg.Enabled,
+			Schema:     cfg.Schema,
+			challenges: make(map[string]*Challenge),
 		}
 	}).(*Verifier)
 }

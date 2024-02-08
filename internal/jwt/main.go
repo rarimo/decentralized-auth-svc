@@ -19,25 +19,22 @@ type JWTIssuer struct {
 	refreshExpiration time.Duration
 }
 
-func (i *JWTIssuer) IssueJWT(claim *AuthClaim) (string, error) {
-	raw := (&RawJWT{make(jwt.MapClaims)}).
-		SetDID(claim.UserDID).
-		SetOrgDID(claim.OrgDID).
-		SetRole(claim.Role).
-		SetGroup(claim.Group)
+func (i *JWTIssuer) IssueJWT(claim *AuthClaim) (token string, exp time.Time, err error) {
+	raw := (&RawJWT{make(jwt.MapClaims)}).SetDID(claim.UserDID)
+
+	exp = time.Now().UTC()
 
 	switch claim.Type {
 	case AccessTokenType:
-		raw.
-			SetTokenAccess().
-			SetExpirationTimestamp(i.accessExpiration)
+		exp = exp.Add(i.accessExpiration)
+		raw.SetTokenAccess().SetExpirationTimestamp(exp)
 	case RefreshTokenType:
-		raw.
-			SetTokenRefresh().
-			SetExpirationTimestamp(i.refreshExpiration)
+		exp = exp.Add(i.refreshExpiration)
+		raw.SetTokenRefresh().SetExpirationTimestamp(exp)
 	}
 
-	return jwt.NewWithClaims(jwt.SigningMethodHS256, raw.claims).SignedString(i.prv)
+	token, err = jwt.NewWithClaims(jwt.SigningMethodHS256, raw.claims).SignedString(i.prv)
+	return
 }
 
 func (i *JWTIssuer) ValidateJWT(str string) (claim *AuthClaim, err error) {
@@ -72,24 +69,11 @@ func (i *JWTIssuer) ValidateJWT(str string) (claim *AuthClaim, err error) {
 		return
 	}
 
-	claim.OrgDID, ok = raw.OrgDID()
-	if !ok {
-		err = errors.New("invalid did: failed to parse")
-		return
-	}
-
-	claim.Role, ok = raw.Role()
-	if !ok {
-		err = errors.New("invalid role: failed to parse")
-		return
-	}
-
 	claim.Type, ok = raw.TokenType()
 	if !ok {
 		err = errors.New("invalid token type: failed to parse")
 		return
 	}
 
-	claim.Group = raw.Group()
 	return
 }

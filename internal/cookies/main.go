@@ -2,6 +2,7 @@ package cookies
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/rarimo/rarime-auth-svc/internal/jwt"
 )
@@ -11,30 +12,34 @@ type Cookies struct {
 	Secure bool
 }
 
-func (c *Cookies) SetTokensCookies(w http.ResponseWriter, access, refresh string) {
-	refreshCookie := &http.Cookie{
-		Name:     jwt.RefreshTokenType.String(),
-		Value:    refresh,
-		Path:     "/",
-		HttpOnly: true,
-		Secure:   c.Secure,
-		SameSite: http.SameSiteLaxMode,
-		Domain:   c.Domain,
-	}
-
-	http.SetCookie(w, refreshCookie)
-
-	accessCookie := &http.Cookie{
+func (c *Cookies) SetAccessToken(w http.ResponseWriter, token string, exp time.Time) {
+	cookie := &http.Cookie{
 		Name:     jwt.AccessTokenType.String(),
-		Value:    access,
+		Value:    token,
 		Path:     "/",
 		HttpOnly: true,
 		Secure:   c.Secure,
 		SameSite: http.SameSiteLaxMode,
 		Domain:   c.Domain,
+		Expires:  exp,
 	}
 
-	http.SetCookie(w, accessCookie)
+	http.SetCookie(w, cookie)
+}
+
+func (c *Cookies) SetRefreshToken(w http.ResponseWriter, token string, exp time.Time) {
+	cookie := &http.Cookie{
+		Name:     jwt.RefreshTokenType.String(),
+		Value:    token,
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   c.Secure,
+		SameSite: http.SameSiteLaxMode,
+		Domain:   c.Domain,
+		Expires:  exp,
+	}
+
+	http.SetCookie(w, cookie)
 }
 
 func (c *Cookies) ClearTokensCookies(w http.ResponseWriter) {

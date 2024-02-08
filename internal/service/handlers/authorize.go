@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	core "github.com/iden3/go-iden3-core"
+	core "github.com/iden3/go-iden3-core/v2"
+	"github.com/iden3/go-iden3-core/v2/w3c"
 	zkptypes "github.com/iden3/go-rapidsnark/types"
 	"github.com/rarimo/rarime-auth-svc/internal/jwt"
 	"github.com/rarimo/rarime-auth-svc/internal/service/requests"
@@ -23,41 +24,32 @@ func Authorize(w http.ResponseWriter, r *http.Request) {
 
 	if Verifier(r).Enabled {
 		var proof zkptypes.ZKProof
-		if err := json.Unmarshal(req.Data.Attributes.Proof.Proof, &proof); err != nil {
+		if err := json.Unmarshal(req.Data.Attributes.Proof, &proof); err != nil {
 			ape.RenderErr(w, problems.BadRequest(err)...)
 			return
 		}
 
-		orgDID, err := core.ParseDID(req.Data.Attributes.Proof.Issuer)
+		userDID, err := w3c.ParseDID(req.Data.ID)
 		if err != nil {
 			ape.RenderErr(w, problems.BadRequest(err)...)
 			return
 		}
 
-		userDID, err := core.ParseDID(req.Data.ID)
+		id, err := core.IDFromDID(*userDID)
 		if err != nil {
 			ape.RenderErr(w, problems.BadRequest(err)...)
 			return
 		}
 
-		if err := Verifier(r).VerifyProof(
-			orgDID.ID.BigInt().String(),
-			userDID.ID.BigInt().String(),
-			req.Data.Attributes.Proof.Role,
-			req.Data.Attributes.Proof.Group,
-			&proof,
-		); err != nil {
+		if err := Verifier(r).VerifyProof(id.BigInt().String(), &proof); err != nil {
 			ape.RenderErr(w, problems.Unauthorized())
 			return
 		}
 	}
 
-	access, err := JWT(r).IssueJWT(
+	access, aexp, err := JWT(r).IssueJWT(
 		&jwt.AuthClaim{
-			OrgDID:  req.Data.Attributes.Proof.Issuer,
 			UserDID: req.Data.ID,
-			Role:    req.Data.Attributes.Proof.Role,
-			Group:   req.Data.Attributes.Proof.Group,
 			Type:    jwt.AccessTokenType,
 		},
 	)
@@ -68,12 +60,9 @@ func Authorize(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	refresh, err := JWT(r).IssueJWT(
+	refresh, rexp, err := JWT(r).IssueJWT(
 		&jwt.AuthClaim{
-			OrgDID:  req.Data.Attributes.Proof.Issuer,
 			UserDID: req.Data.ID,
-			Role:    req.Data.Attributes.Proof.Role,
-			Group:   req.Data.Attributes.Proof.Group,
 			Type:    jwt.RefreshTokenType,
 		},
 	)
@@ -103,6 +92,7 @@ func Authorize(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	Cookies(r).SetTokensCookies(w, access, refresh)
+	Cookies(r).SetAccessToken(w, access, aexp)
+	Cookies(r).SetRefreshToken(w, refresh, rexp)
 	ape.Render(w, resp)
 }

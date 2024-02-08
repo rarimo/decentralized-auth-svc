@@ -4,8 +4,12 @@
 
 ## Description
 
-RariMe Auth service designed to authorize users with ZK-proofs of role-claim ownership and issue JWT tokens based on it.
+RariMe Auth service designed to authorize users with Iden3 AuthV2 ZK-proofs and issue JWT tokens based on it.
 This JWT can be used on other internal or external service to authenticate user for executing endpoints.
+
+Frontend firstly should request Base64-encoded challenge using `v1/authorize/{did}/challenge` request.
+Then generate AuthV2 ZK proof with received challenge as decoded big-endian value. Using this proof
+execute `v1/authorize` request and receive JWT (refresh and access) tokens in response and also in cookies.
 
 ## Usage
 
@@ -15,13 +19,14 @@ with `Authenticates` method to check uses access.
 
 Example:
 
-Add middleware to endpoints that require auth: 
+Add middleware to endpoints that require auth:
+
 ```go
 package middleware
 
 import (
 	"net/http"
-	
+
 	"github.com/rarimo/rarime-auth-svc/pkg/auth"
 	"gitlab.com/distributed_lab/ape"
 	"gitlab.com/distributed_lab/ape/problems"
@@ -30,19 +35,11 @@ import (
 func AuthMiddleware(client *auth.Client) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			claim, code, err := client.ValidateJWT(r.Header)
+			claim, err := client.ValidateJWT(r)
 			if err != nil {
-				if code == http.StatusUnauthorized {
-					ape.RenderErr(w, problems.Unauthorized())	
-					return
-                }
-
-				// Log err and render internal
-				
-				ape.RenderErr(w, problems.InternalError())
+				ape.RenderErr(w, problems.Unauthorized())
 				return
 			}
-
 
 			// Save claims somewhere (probably in request context)
 			ctx := handlers.CtxClaim(claim)(r.Context())
@@ -53,20 +50,22 @@ func AuthMiddleware(client *auth.Client) func(http.Handler) http.Handler {
 ```
 
 How protected endpoints definition looks like:
+
 ```go
-r.Route("/integrations/your-service", func(r chi.Router) {
-		r.Route("/v1", func(r chi.Router) {
-			r.Post("/unprotected", handlers.Unprotected)
-			r.With(middleware.AuthMiddleware(s.client)).Get("/protected", handlers.Protected)
-		})
-	})
+r.Route("/integrations/your-service", func (r chi.Router) {
+r.Route("/v1", func (r chi.Router) {
+r.Post("/unprotected", handlers.Unprotected)
+r.With(middleware.AuthMiddleware(s.client)).Get("/protected", handlers.Protected)
+})
+})
 ```
 
 Then, use parsed claims in handler to allow users execute business logic:
+
 ```go
-if !auth.Authenticates([]resources.Claim{claim}, auth.GroupRoleGrant("did", "org", role, group)) {
-    ape.RenderErr(w, problems.Unauthorized())
-    return
+if !auth.Authenticates([]resources.Claim{claim}, auth.UserGrant("did")) {
+ape.RenderErr(w, problems.Unauthorized())
+return
 }
 ```
 

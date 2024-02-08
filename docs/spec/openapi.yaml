@@ -4,5 +4,5 @@ info:
   title: rarime-auth-svc
   description: ''
 servers:
-  - url: 'https://api.demo.tokend.io'
-    description: TokenD Developer Environment
+  - url: 'https://api.orgs.app.stage.rarime.com/integrations/rarime-auth-svc'
+    description: RariMe Stage envirinment

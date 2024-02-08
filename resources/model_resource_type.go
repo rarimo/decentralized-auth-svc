@@ -8,7 +8,9 @@ type ResourceType string
 
 // List of ResourceType
 const (
-	AUTHORIZE         ResourceType = "authorize"
+	REQUEST_AUTHORIZE ResourceType = "request-authorize"
+	REQUEST_CHALLENGE ResourceType = "request-challenge"
 	TOKEN             ResourceType = "token"
-	VALIDATION_RESULT ResourceType = "validation-result"
+	VALIDATION        ResourceType = "validation"
+	CHALLENGE         ResourceType = "challenge"
 )
