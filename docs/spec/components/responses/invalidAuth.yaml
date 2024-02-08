@@ -1,0 +1,5 @@
+description: Failed to authorize JWT
+content:
+  application/vnd.api+json:
+    schema:
+      $ref: '#/components/schemas/Errors'

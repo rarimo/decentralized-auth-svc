@@ -1,0 +1,6 @@
+.idea
+/vendor/
+/docs/node_modules/
+/docs/web_deploy/
+
+config.*.yaml

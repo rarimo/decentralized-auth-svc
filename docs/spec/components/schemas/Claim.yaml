@@ -1,0 +1,13 @@
+description: 'Authorized user personal data'
+type: object
+required:
+  - user
+properties:
+  address:
+    type: string
+    example: "0xF65F3f18D9087c4E35BAC5b9746492082e186872"
+    description: User EVM address hex-encoded
+  user:
+    type: string
+    example: "did:iden3:readonly:tM1QCJ7ytcbvLB7EFQhGsJPumc11DEE18gEvAzxE7"
+    description: User DID authorized with
