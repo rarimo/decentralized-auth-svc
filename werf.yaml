@@ -1,13 +1,13 @@
 configVersion: 1
-project: "rarime-auth-svc"
+project: "auth-svc"
 ---
 image: builder
 from: golang:1.21-alpine
 docker:
-  WORKDIR: /go/src/github.com/rarimo/rarime-auth-svc
+  WORKDIR: /go/src/github.com/rarimo/auth-svc
 git:
   - add: /
-    to: /go/src/github.com/rarimo/rarime-auth-svc
+    to: /go/src/github.com/rarimo/auth-svc
     stageDependencies:
       install:
         - go.mod
@@ -20,26 +20,26 @@ shell:
     - export CGO_ENABLED=1
     - export GO111MODULE=on
     - export GOOS=linux
-    - cd /go/src/github.com/rarimo/rarime-auth-svc
+    - cd /go/src/github.com/rarimo/auth-svc
     - go mod tidy
     - go mod vendor
   setup:
     - export CGO_ENABLED=1
     - export GO111MODULE=on
     - export GOOS=linux
-    - cd /go/src/github.com/rarimo/rarime-auth-svc
-    - go build -o /usr/local/bin/rarime-auth-svc /go/src/github.com/rarimo/rarime-auth-svc
+    - cd /go/src/github.com/rarimo/auth-svc
+    - go build -o /usr/local/bin/auth-svc /go/src/github.com/rarimo/auth-svc
 
 ---
 image: service
 from: alpine:3.9
 docker:
-  ENTRYPOINT: rarime-auth-svc
+  ENTRYPOINT: auth-svc
 shell:
   setup:
     - apk add --no-cache ca-certificates
 import:
   - image: builder
-    add: /usr/local/bin/rarime-auth-svc
-    to: /usr/local/bin/rarime-auth-svc
+    add: /usr/local/bin/auth-svc
+    to: /usr/local/bin/auth-svc
     after: setup

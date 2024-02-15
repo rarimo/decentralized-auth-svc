@@ -4,10 +4,10 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/rarimo/rarime-auth-svc/internal/config"
-	"github.com/rarimo/rarime-auth-svc/internal/cookies"
-	"github.com/rarimo/rarime-auth-svc/internal/jwt"
-	"github.com/rarimo/rarime-auth-svc/internal/zkp"
+	"github.com/rarimo/auth-svc/internal/config"
+	"github.com/rarimo/auth-svc/internal/cookies"
+	"github.com/rarimo/auth-svc/internal/jwt"
+	"github.com/rarimo/auth-svc/internal/zkp"
 	"gitlab.com/distributed_lab/logan/v3"
 )
 

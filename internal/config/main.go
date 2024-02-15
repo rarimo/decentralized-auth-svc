@@ -1,9 +1,9 @@
 package config
 
 import (
-	"github.com/rarimo/rarime-auth-svc/internal/cookies"
-	"github.com/rarimo/rarime-auth-svc/internal/jwt"
-	"github.com/rarimo/rarime-auth-svc/internal/zkp"
+	"github.com/rarimo/auth-svc/internal/cookies"
+	"github.com/rarimo/auth-svc/internal/jwt"
+	"github.com/rarimo/auth-svc/internal/zkp"
 	"gitlab.com/distributed_lab/kit/comfig"
 	"gitlab.com/distributed_lab/kit/kv"
 )

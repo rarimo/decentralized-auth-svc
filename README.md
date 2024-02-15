@@ -1,4 +1,4 @@
-# rarime-auth-svc
+# auth-svc
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -27,7 +27,7 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/rarimo/rarime-auth-svc/pkg/auth"
+	"github.com/rarimo/auth-svc/pkg/auth"
 	"gitlab.com/distributed_lab/ape"
 	"gitlab.com/distributed_lab/ape/problems"
 )
@@ -72,8 +72,8 @@ return
 ## Install
 
   ```
-  git clone github.com/rarimo/rarime-auth-svc
-  cd rarime-auth-svc
+  git clone github.com/rarimo/auth-svc
+  cd auth-svc
   go build main.go
   export KV_VIPER_FILE=./config.yaml
   ./main run service
@@ -107,8 +107,8 @@ Make sure that docker installed.
 use `docker run ` with `-p 8080:80` to expose port 80 to 8080
 
   ```
-  docker build -t github.com/rarimo/rarime-auth-svc .
-  docker run -e KV_VIPER_FILE=/config.yaml github.com/rarimo/rarime-auth-svc
+  docker build -t github.com/rarimo/auth-svc .
+  docker run -e KV_VIPER_FILE=/config.yaml github.com/rarimo/auth-svc
   ```
 
 ## Running from Source

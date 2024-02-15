@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
   version: 1.0.0
-  title: rarime-auth-svc
+  title: auth-svc
   description: ''
 servers:
-  - url: 'https://api.orgs.app.stage.rarime.com/integrations/rarime-auth-svc'
+  - url: 'https://api.orgs.app.stage.rarime.com/integrations/auth-svc'
     description: RariMe Stage envirinment

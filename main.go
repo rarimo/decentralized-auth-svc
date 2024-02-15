@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/rarimo/rarime-auth-svc/internal/cli"
+	"github.com/rarimo/auth-svc/internal/cli"
 )
 
 func main() {

@@ -3,9 +3,9 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/rarimo/rarime-auth-svc/internal/jwt"
-	"github.com/rarimo/rarime-auth-svc/internal/service/handlers"
-	"github.com/rarimo/rarime-auth-svc/pkg"
+	"github.com/rarimo/auth-svc/internal/jwt"
+	"github.com/rarimo/auth-svc/internal/service/handlers"
+	"github.com/rarimo/auth-svc/pkg"
 	"gitlab.com/distributed_lab/ape"
 	"gitlab.com/distributed_lab/ape/problems"
 	"gitlab.com/distributed_lab/logan/v3"

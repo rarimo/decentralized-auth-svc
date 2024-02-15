@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/rarimo/rarime-auth-svc/internal/jwt"
+	"github.com/rarimo/auth-svc/internal/jwt"
 	"gitlab.com/distributed_lab/logan/v3/errors"
 )
 

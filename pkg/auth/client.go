@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/rarimo/rarime-auth-svc/internal/jwt"
-	"github.com/rarimo/rarime-auth-svc/pkg"
-	"github.com/rarimo/rarime-auth-svc/resources"
+	"github.com/rarimo/auth-svc/internal/jwt"
+	"github.com/rarimo/auth-svc/pkg"
+	"github.com/rarimo/auth-svc/resources"
 	"gitlab.com/distributed_lab/logan/v3/errors"
 )
 
 const (
-	FullValidatePath = "integrations/rarime-auth-svc/v1/validate"
+	FullValidatePath = "integrations/auth-svc/v1/validate"
 )
 
 type Client struct {

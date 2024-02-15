@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/rarimo/rarime-auth-svc/resources"
+	"github.com/rarimo/auth-svc/resources"
 	"gitlab.com/distributed_lab/logan/v3/errors"
 )
 

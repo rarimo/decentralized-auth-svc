@@ -3,8 +3,8 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/rarimo/rarime-auth-svc/internal/jwt"
-	"github.com/rarimo/rarime-auth-svc/resources"
+	"github.com/rarimo/auth-svc/internal/jwt"
+	"github.com/rarimo/auth-svc/resources"
 	"gitlab.com/distributed_lab/ape"
 	"gitlab.com/distributed_lab/ape/problems"
 )

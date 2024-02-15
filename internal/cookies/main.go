@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/rarimo/rarime-auth-svc/internal/jwt"
+	"github.com/rarimo/auth-svc/internal/jwt"
 )
 
 type Cookies struct {

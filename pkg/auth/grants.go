@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"github.com/rarimo/rarime-auth-svc/resources"
+	"github.com/rarimo/auth-svc/resources"
 )
 
 func UserGrant(userDID string) Grant {

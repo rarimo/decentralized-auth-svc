@@ -1,6 +1,6 @@
 package auth
 
-import "github.com/rarimo/rarime-auth-svc/resources"
+import "github.com/rarimo/auth-svc/resources"
 
 type Grant func(claim resources.Claim) bool
 
