@@ -27,7 +27,6 @@ type Verifier struct {
 	mu sync.Mutex
 
 	Enabled bool
-	Schema  string
 
 	// Map for storing challenges to be verified in auth proofs. No need to store in db - very short-live data.
 	challenges map[string]*Challenge

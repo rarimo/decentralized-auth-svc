@@ -25,8 +25,7 @@ type verifierer struct {
 func (v *verifierer) Verifier() *Verifier {
 	return v.once.Do(func() interface{} {
 		cfg := struct {
-			Enabled bool   `fig:"enabled"`
-			Schema  string `fig:"schema,required"`
+			Enabled bool `fig:"enabled"`
 		}{
 			Enabled: true,
 		}
@@ -42,7 +41,6 @@ func (v *verifierer) Verifier() *Verifier {
 
 		return &Verifier{
 			Enabled:    cfg.Enabled,
-			Schema:     cfg.Schema,
 			challenges: make(map[string]*Challenge),
 		}
 	}).(*Verifier)
