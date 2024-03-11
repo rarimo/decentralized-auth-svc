@@ -25,8 +25,9 @@ type cookier struct {
 func (j *cookier) Cookies() *Cookies {
 	return j.once.Do(func() interface{} {
 		cfg := struct {
-			Domain string `fig:"domain,required"`
-			Secure bool   `fig:"secure,required"`
+			Domain   string `fig:"domain,required"`
+			Secure   bool   `fig:"secure,required"`
+			SameSite int    `fig:"same_site,required"`
 		}{}
 		err := figure.
 			Out(&cfg).

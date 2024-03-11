@@ -12,8 +12,9 @@ const (
 )
 
 type Cookies struct {
-	Domain string
-	Secure bool
+	Domain   string
+	Secure   bool
+	SameSite int
 }
 
 func (c *Cookies) SetAccessToken(w http.ResponseWriter, token string, exp time.Time) {
@@ -23,7 +24,7 @@ func (c *Cookies) SetAccessToken(w http.ResponseWriter, token string, exp time.T
 		Path:     "/",
 		HttpOnly: true,
 		Secure:   c.Secure,
-		SameSite: http.SameSiteLaxMode,
+		SameSite: http.SameSite(c.SameSite),
 		Domain:   c.Domain,
 		Expires:  exp,
 	}
@@ -38,7 +39,7 @@ func (c *Cookies) SetRefreshToken(w http.ResponseWriter, token string, exp time.
 		Path:     "/",
 		HttpOnly: true,
 		Secure:   c.Secure,
-		SameSite: http.SameSiteLaxMode,
+		SameSite: http.SameSite(c.SameSite),
 		Domain:   c.Domain,
 		Expires:  exp,
 	}
@@ -54,7 +55,7 @@ func (c *Cookies) ClearTokensCookies(w http.ResponseWriter) {
 		HttpOnly: true,
 		Secure:   c.Secure,
 		MaxAge:   -1,
-		SameSite: http.SameSiteLaxMode,
+		SameSite: http.SameSite(c.SameSite),
 		Domain:   c.Domain,
 	}
 
@@ -67,7 +68,7 @@ func (c *Cookies) ClearTokensCookies(w http.ResponseWriter) {
 		HttpOnly: true,
 		Secure:   c.Secure,
 		MaxAge:   -1,
-		SameSite: http.SameSiteLaxMode,
+		SameSite: http.SameSite(c.SameSite),
 		Domain:   c.Domain,
 	}
 
