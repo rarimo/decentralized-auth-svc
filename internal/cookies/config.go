@@ -39,8 +39,9 @@ func (j *cookier) Cookies() *Cookies {
 		}
 
 		return &Cookies{
-			Domain: cfg.Domain,
-			Secure: cfg.Secure,
+			Domain:   cfg.Domain,
+			Secure:   cfg.Secure,
+			SameSite: cfg.SameSite,
 		}
 	}).(*Cookies)
 }
