@@ -7,6 +7,10 @@ import (
 	"github.com/rarimo/auth-svc/internal/jwt"
 )
 
+const (
+	CookieHeaderName = "Cookie"
+)
+
 type Cookies struct {
 	Domain string
 	Secure bool
