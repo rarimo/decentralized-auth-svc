@@ -2,9 +2,9 @@ package service
 
 import (
 	"github.com/go-chi/chi"
-	"github.com/rarimo/auth-svc/internal/jwt"
-	"github.com/rarimo/auth-svc/internal/service/handlers"
-	"github.com/rarimo/auth-svc/internal/service/middleware"
+	"github.com/rarimo/decentralized-auth-svc/internal/jwt"
+	"github.com/rarimo/decentralized-auth-svc/internal/service/handlers"
+	"github.com/rarimo/decentralized-auth-svc/internal/service/middleware"
 	"gitlab.com/distributed_lab/ape"
 )
 
@@ -22,7 +22,7 @@ func (s *service) router() chi.Router {
 		),
 	)
 
-	r.Route("/integrations/auth-svc", func(r chi.Router) {
+	r.Route("/integrations/decentralized-auth-svc", func(r chi.Router) {
 		r.Route("/v1", func(r chi.Router) {
 			r.Post("/authorize", handlers.Authorize)
 			r.Get("/authorize/{did}/challenge", handlers.RequestChallenge)

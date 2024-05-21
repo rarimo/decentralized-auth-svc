@@ -3,16 +3,16 @@ package auth
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/rarimo/auth-svc/internal/cookies"
-	"github.com/rarimo/auth-svc/internal/jwt"
+	"github.com/rarimo/decentralized-auth-svc/internal/cookies"
+	"github.com/rarimo/decentralized-auth-svc/internal/jwt"
 	"net/http"
 
-	"github.com/rarimo/auth-svc/resources"
+	"github.com/rarimo/decentralized-auth-svc/resources"
 	"gitlab.com/distributed_lab/logan/v3/errors"
 )
 
 const (
-	FullValidatePath = "integrations/auth-svc/v1/validate"
+	FullValidatePath = "integrations/decentralized-auth-svc/v1/validate"
 )
 
 type Client struct {

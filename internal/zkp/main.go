@@ -10,7 +10,7 @@ import (
 
 	zkptypes "github.com/iden3/go-rapidsnark/types"
 	"github.com/iden3/go-rapidsnark/verifier"
-	"github.com/rarimo/auth-svc/pkg/circuit"
+	"github.com/rarimo/decentralized-auth-svc/pkg/circuit"
 	"gitlab.com/distributed_lab/logan/v3/errors"
 )
 

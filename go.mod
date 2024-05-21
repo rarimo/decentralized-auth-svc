@@ -1,4 +1,4 @@
-module github.com/rarimo/auth-svc
+module github.com/rarimo/decentralized-auth-svc
 
 go 1.21.0
 

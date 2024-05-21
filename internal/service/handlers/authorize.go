@@ -7,9 +7,9 @@ import (
 	core "github.com/iden3/go-iden3-core/v2"
 	"github.com/iden3/go-iden3-core/v2/w3c"
 	zkptypes "github.com/iden3/go-rapidsnark/types"
-	"github.com/rarimo/auth-svc/internal/jwt"
-	"github.com/rarimo/auth-svc/internal/service/requests"
-	"github.com/rarimo/auth-svc/resources"
+	"github.com/rarimo/decentralized-auth-svc/internal/jwt"
+	"github.com/rarimo/decentralized-auth-svc/internal/service/requests"
+	"github.com/rarimo/decentralized-auth-svc/resources"
 	"gitlab.com/distributed_lab/ape"
 	"gitlab.com/distributed_lab/ape/problems"
 )
