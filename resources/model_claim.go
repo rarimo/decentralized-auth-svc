@@ -8,6 +8,6 @@ package resources
 type Claim struct {
 	// User EVM address hex-encoded
 	Address *string `json:"address,omitempty"`
-	// User DID authorized with
-	User string `json:"user"`
+	// Nullifier authorized with
+	Nullifier string `json:"nullifier"`
 }

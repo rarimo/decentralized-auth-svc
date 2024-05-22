@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	UserDIDClaimName             = "sub"
+	NullifierClaimName           = "sub"
 	ExpirationTimestampClaimName = "exp"
 	TokenTypeClaimName           = "type"
 )
@@ -25,8 +25,8 @@ var (
 
 // AuthClaim is a helper structure to organize all claims in one entity
 type AuthClaim struct {
-	UserDID string
-	Type    TokenType
+	Nullifier string
+	Type      TokenType
 }
 
 // RawJWT represents helper structure to provide setter and getter methods to work with JWT claims
@@ -36,8 +36,8 @@ type RawJWT struct {
 
 // Setters
 
-func (r *RawJWT) SetDID(did string) *RawJWT {
-	r.claims[UserDIDClaimName] = did
+func (r *RawJWT) SetNullifier(nullifier string) *RawJWT {
+	r.claims[NullifierClaimName] = nullifier
 	return r
 }
 
@@ -58,10 +58,10 @@ func (r *RawJWT) SetTokenRefresh() *RawJWT {
 
 // Getters
 
-func (r *RawJWT) DID() (res string, ok bool) {
+func (r *RawJWT) Nullifier() (res string, ok bool) {
 	var val interface{}
 
-	if val, ok = r.claims[UserDIDClaimName]; !ok {
+	if val, ok = r.claims[NullifierClaimName]; !ok {
 		return
 	}
 

@@ -1,9 +1,10 @@
 package handlers
 
 import (
+	"math/big"
 	"net/http"
 
-	core "github.com/iden3/go-iden3-core/v2"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/rarimo/decentralized-auth-svc/internal/service/requests"
 	"github.com/rarimo/decentralized-auth-svc/resources"
 	"gitlab.com/distributed_lab/ape"
@@ -11,19 +12,19 @@ import (
 )
 
 func RequestChallenge(w http.ResponseWriter, r *http.Request) {
-	did, err := requests.GetPathDID(r)
+	nullifier, err := requests.GetPathNullifier(r)
 	if err != nil {
 		ape.RenderErr(w, problems.BadRequest(err)...)
 		return
 	}
 
-	id, err := core.IDFromDID(*did)
+	nullifierBytes, err := hexutil.Decode(nullifier)
 	if err != nil {
 		ape.RenderErr(w, problems.BadRequest(err)...)
 		return
 	}
 
-	challenge, err := Verifier(r).Challenge(id.BigInt().String())
+	challenge, err := Verifier(r).Challenge(new(big.Int).SetBytes(nullifierBytes).String())
 	if err != nil {
 		Log(r).WithError(err).Error("failed to generate challenge")
 		ape.RenderErr(w, problems.InternalError())
@@ -33,7 +34,7 @@ func RequestChallenge(w http.ResponseWriter, r *http.Request) {
 	resp := resources.ChallengeResponse{
 		Data: resources.Challenge{
 			Key: resources.Key{
-				ID:   did.String(),
+				ID:   nullifier,
 				Type: resources.CHALLENGE,
 			},
 			Attributes: resources.ChallengeAttributes{

@@ -32,8 +32,8 @@ func TestJWT(t *testing.T) {
 
 	jwt, _, err := issuer.IssueJWT(
 		&AuthClaim{
-			UserDID: "did:iden3:readonly:tM1QCJ7ytcbvLB7EFQhGsJPumc11DEE18gEvAzxE7",
-			Type:    AccessTokenType,
+			Nullifier: "0x31ba24c27a7d9b14fef5e48a26e79566525646ff341fd7c0855932c28cca452c",
+			Type:      AccessTokenType,
 		},
 	)
 	assert.NilError(t, err)
@@ -41,6 +41,6 @@ func TestJWT(t *testing.T) {
 	claim, err := issuer.ValidateJWT(jwt)
 	assert.NilError(t, err)
 
-	assert.Equal(t, claim.UserDID, "did:iden3:readonly:tM1QCJ7ytcbvLB7EFQhGsJPumc11DEE18gEvAzxE7")
+	assert.Equal(t, claim.Nullifier, "0x31ba24c27a7d9b14fef5e48a26e79566525646ff341fd7c0855932c28cca452c")
 	assert.Equal(t, claim.Type, AccessTokenType)
 }

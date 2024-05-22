@@ -7,7 +7,7 @@
 RariMe Auth service designed to authorize users with Iden3 AuthV2 ZK-proofs and issue JWT tokens based on it.
 This JWT can be used on other internal or external service to authenticate user for executing endpoints.
 
-Frontend firstly should request Base64-encoded challenge using `v1/authorize/{did}/challenge` request.
+Frontend firstly should request Base64-encoded challenge using `v1/authorize/{nullifier}/challenge` request.
 Then generate AuthV2 ZK proof with received challenge as decoded big-endian value. Using this proof
 execute `v1/authorize` request and receive JWT (refresh and access) tokens in response and also in cookies.
 
@@ -63,7 +63,7 @@ r.With(middleware.AuthMiddleware(s.client)).Get("/protected", handlers.Protected
 Then, use parsed claims in handler to allow users execute business logic:
 
 ```go
-if !auth.Authenticates([]resources.Claim{claim}, auth.UserGrant("did")) {
+if !auth.Authenticates([]resources.Claim{claim}, auth.UserGrant("nullifier")) {
 ape.RenderErr(w, problems.Unauthorized())
 return
 }

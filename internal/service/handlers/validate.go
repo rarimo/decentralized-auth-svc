@@ -24,13 +24,13 @@ func Validate(w http.ResponseWriter, r *http.Request) {
 	resp := resources.ValidationResultResponse{
 		Data: resources.ValidationResult{
 			Key: resources.Key{
-				ID:   claim.UserDID,
+				ID:   claim.Nullifier,
 				Type: resources.VALIDATION,
 			},
 			Attributes: resources.ValidationResultAttributes{
 				Claims: []resources.Claim{
 					{
-						User: claim.UserDID,
+						Nullifier: claim.Nullifier,
 					},
 				},
 			},
