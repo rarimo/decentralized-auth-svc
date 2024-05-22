@@ -23,26 +23,26 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 
 	access, aexp, err := JWT(r).IssueJWT(
 		&jwt.AuthClaim{
-			UserDID: claim.UserDID,
-			Type:    jwt.AccessTokenType,
+			Nullifier: claim.Nullifier,
+			Type:      jwt.AccessTokenType,
 		},
 	)
 
 	if err != nil {
-		Log(r).WithError(err).WithField("user", claim.UserDID).Error("failed to issuer JWT token")
+		Log(r).WithError(err).WithField("user", claim.Nullifier).Error("failed to issuer JWT token")
 		ape.RenderErr(w, problems.InternalError())
 		return
 	}
 
 	refresh, rexp, err := JWT(r).IssueJWT(
 		&jwt.AuthClaim{
-			UserDID: claim.UserDID,
-			Type:    jwt.RefreshTokenType,
+			Nullifier: claim.Nullifier,
+			Type:      jwt.RefreshTokenType,
 		},
 	)
 
 	if err != nil {
-		Log(r).WithError(err).WithField("user", claim.UserDID).Error("failed to issuer JWT token")
+		Log(r).WithError(err).WithField("user", claim.Nullifier).Error("failed to issuer JWT token")
 		ape.RenderErr(w, problems.InternalError())
 		return
 	}
@@ -50,7 +50,7 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 	resp := resources.TokenResponse{
 		Data: resources.Token{
 			Key: resources.Key{
-				ID:   claim.UserDID,
+				ID:   claim.Nullifier,
 				Type: resources.TOKEN,
 			},
 			Attributes: resources.TokenAttributes{

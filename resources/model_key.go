@@ -4,9 +4,7 @@
 
 package resources
 
-import (
-	"strconv"
-)
+import "strconv"
 
 type Key struct {
 	ID   string       `json:"id"`

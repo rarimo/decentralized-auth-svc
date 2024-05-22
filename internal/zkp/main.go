@@ -33,7 +33,7 @@ type Verifier struct {
 }
 
 func (v *Verifier) Challenge(user string) (string, error) {
-	challenge := make([]byte, 32)
+	challenge := make([]byte, 31)
 	if _, err := rand.Read(challenge); err != nil {
 		return "", err
 	}
@@ -73,8 +73,9 @@ func (v *Verifier) VerifyProof(user string, proof *zkptypes.ZKProof) (err error)
 	// no error can appear
 	chal, _ := base64.StdEncoding.DecodeString(challenge.Value)
 
-	proof.PubSignals[UserIdSignalsIndex] = user
-	proof.PubSignals[ChallengeSignalsIndex] = new(big.Int).SetBytes(chal).String()
+	proof.PubSignals[NullifierSignalsIndex] = user
+	proof.PubSignals[EventIDSignalsIndex] = EventID
+	proof.PubSignals[EventDataSignalsIndex] = new(big.Int).SetBytes(chal).String()
 
 	if err := verifier.VerifyGroth16(*proof, verificationKey); err != nil {
 		return errors.Wrap(err, "failed to verify generated proof")

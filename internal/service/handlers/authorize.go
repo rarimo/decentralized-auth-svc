@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"encoding/json"
+	"math/big"
 	"net/http"
 
-	core "github.com/iden3/go-iden3-core/v2"
-	"github.com/iden3/go-iden3-core/v2/w3c"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	zkptypes "github.com/iden3/go-rapidsnark/types"
 	"github.com/rarimo/decentralized-auth-svc/internal/jwt"
 	"github.com/rarimo/decentralized-auth-svc/internal/service/requests"
@@ -29,19 +29,13 @@ func Authorize(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		userDID, err := w3c.ParseDID(req.Data.ID)
+		nullifier, err := hexutil.Decode(req.Data.ID)
 		if err != nil {
 			ape.RenderErr(w, problems.BadRequest(err)...)
 			return
 		}
 
-		id, err := core.IDFromDID(*userDID)
-		if err != nil {
-			ape.RenderErr(w, problems.BadRequest(err)...)
-			return
-		}
-
-		if err := Verifier(r).VerifyProof(id.BigInt().String(), &proof); err != nil {
+		if err := Verifier(r).VerifyProof(new(big.Int).SetBytes(nullifier).String(), &proof); err != nil {
 			ape.RenderErr(w, problems.Unauthorized())
 			return
 		}
@@ -49,8 +43,8 @@ func Authorize(w http.ResponseWriter, r *http.Request) {
 
 	access, aexp, err := JWT(r).IssueJWT(
 		&jwt.AuthClaim{
-			UserDID: req.Data.ID,
-			Type:    jwt.AccessTokenType,
+			Nullifier: req.Data.ID,
+			Type:      jwt.AccessTokenType,
 		},
 	)
 
@@ -62,8 +56,8 @@ func Authorize(w http.ResponseWriter, r *http.Request) {
 
 	refresh, rexp, err := JWT(r).IssueJWT(
 		&jwt.AuthClaim{
-			UserDID: req.Data.ID,
-			Type:    jwt.RefreshTokenType,
+			Nullifier: req.Data.ID,
+			Type:      jwt.RefreshTokenType,
 		},
 	)
 

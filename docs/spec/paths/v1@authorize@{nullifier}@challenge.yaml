@@ -6,7 +6,7 @@ get:
     Request challenge to generate AuthV2 proof with
   operationId: challenge
   parameters:
-    - $ref: '#/components/parameters/pathDID'
+    - $ref: '#/components/parameters/pathNullifier'
   responses:
     200:
       description: Success
