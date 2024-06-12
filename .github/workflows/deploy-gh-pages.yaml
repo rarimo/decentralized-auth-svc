@@ -6,10 +6,10 @@
 name: Deploy to Github pages
 
 on:
+  workflow_dispatch:
   push:
-    #tags:
-    #  - v*
     branches:
+      - main
       - master
 
 jobs:
