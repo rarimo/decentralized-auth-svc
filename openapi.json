@@ -72,7 +72,7 @@
           "Authorize"
         ],
         "summary": "Request challenge",
-        "description": "Request challenge to generate AuthV2 proof with\n",
+        "description": "Request challenge to generate Query proof with\n",
         "operationId": "challenge",
         "parameters": [
           {
@@ -207,7 +207,7 @@
       "Authorize": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/UserKey"
+            "$ref": "#/components/schemas/AuthorizeKey"
           },
           {
             "type": "object",
@@ -225,7 +225,7 @@
                   "proof": {
                     "type": "object",
                     "format": "json.RawMessage",
-                    "description": "JSON encoded ZK proof AuthV2 proof."
+                    "description": "JSON-encoded Query ZK-proof."
                   }
                 }
               }
@@ -233,10 +233,31 @@
           }
         ]
       },
+      "AuthorizeKey": {
+        "type": "object",
+        "required": [
+          "id",
+          "type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "0x123...abc",
+            "pattern": "^0x[0-9a-fA-F]{64}$",
+            "description": "User nullifier 32 bytes"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "authorize"
+            ]
+          }
+        }
+      },
       "Challenge": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/UserKey"
+            "$ref": "#/components/schemas/ChallengeKey"
           },
           {
             "type": "object",
@@ -251,7 +272,7 @@
                 "properties": {
                   "challenge": {
                     "type": "string",
-                    "description": "Base64 encoded challenge. Use it to generate AuthV2 ZK proof. Decode base64 string and convert into big-endian decimal number.",
+                    "description": "Base64 encoded challenge. Use it to generate Query ZK-proof.\nDecode base64 string and convert into big-endian decimal number.\n",
                     "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
                   }
                 }
@@ -260,6 +281,27 @@
           }
         ]
       },
+      "ChallengeKey": {
+        "type": "object",
+        "required": [
+          "id",
+          "type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "0x123...abc",
+            "pattern": "^0x[0-9a-fA-F]{64}$",
+            "description": "User nullifier 32 bytes"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "challenge"
+            ]
+          }
+        }
+      },
       "Claim": {
         "description": "Authorized user personal data",
         "type": "object",
@@ -267,11 +309,6 @@
           "nullifier"
         ],
         "properties": {
-          "address": {
-            "type": "string",
-            "example": "0xF65F3f18D9087c4E35BAC5b9746492082e186872",
-            "description": "User EVM address hex-encoded"
-          },
           "nullifier": {
             "type": "string",
             "example": "0x123...abc",
@@ -330,7 +367,7 @@
         "type": "object",
         "required": [
           "token",
-          "tokenType"
+          "token_type"
         ],
         "properties": {
           "token": {
@@ -338,7 +375,7 @@
             "description": "Base64 encoded JWT",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
           },
-          "tokenType": {
+          "token_type": {
             "type": "string",
             "enum": [
               "access",
@@ -350,7 +387,7 @@
       "Token": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/UserKey"
+            "$ref": "#/components/schemas/TokenKey"
           },
           {
             "type": "object",
@@ -360,15 +397,15 @@
             "properties": {
               "attributes": {
                 "required": [
-                  "accessToken",
-                  "refreshToken"
+                  "access_token",
+                  "refresh_token"
                 ],
                 "type": "object",
                 "properties": {
-                  "accessToken": {
+                  "access_token": {
                     "$ref": "#/components/schemas/JWT"
                   },
-                  "refreshToken": {
+                  "refresh_token": {
                     "$ref": "#/components/schemas/JWT"
                   }
                 }
@@ -377,7 +414,7 @@
           }
         ]
       },
-      "UserKey": {
+      "TokenKey": {
         "type": "object",
         "required": [
           "id",
@@ -393,11 +430,7 @@
           "type": {
             "type": "string",
             "enum": [
-              "request-authorize",
-              "request-challenge",
-              "token",
-              "validation",
-              "challenge"
+              "token"
             ]
           }
         }
@@ -405,7 +438,7 @@
       "ValidationResult": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/UserKey"
+            "$ref": "#/components/schemas/ValidationResultKey"
           },
           {
             "type": "object",
@@ -430,6 +463,27 @@
             }
           }
         ]
+      },
+      "ValidationResultKey": {
+        "type": "object",
+        "required": [
+          "id",
+          "type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "0x123...abc",
+            "pattern": "^0x[0-9a-fA-F]{64}$",
+            "description": "User nullifier 32 bytes"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "validation"
+            ]
+          }
+        }
       }
     },
     "responses": {
