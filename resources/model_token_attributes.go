@@ -5,6 +5,6 @@
 package resources
 
 type TokenAttributes struct {
-	AccessToken  Jwt `json:"accessToken"`
-	RefreshToken Jwt `json:"refreshToken"`
+	AccessToken  Jwt `json:"access_token"`
+	RefreshToken Jwt `json:"refresh_token"`
 }

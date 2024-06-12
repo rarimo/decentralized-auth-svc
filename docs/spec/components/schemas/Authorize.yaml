@@ -1,5 +1,5 @@
 allOf:
-  - $ref: '#/components/schemas/UserKey'
+  - $ref: '#/components/schemas/AuthorizeKey'
   - type: object
     x-go-is-request: true
     required:
@@ -13,4 +13,4 @@ allOf:
           proof:
             type: object
             format: json.RawMessage
-            description: JSON encoded ZK proof AuthV2 proof.
+            description: JSON-encoded Query ZK-proof.

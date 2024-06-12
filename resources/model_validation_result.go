@@ -4,6 +4,8 @@
 
 package resources
 
+import "encoding/json"
+
 type ValidationResult struct {
 	Key
 	Attributes ValidationResultAttributes `json:"attributes"`
@@ -17,6 +19,16 @@ type ValidationResultListResponse struct {
 	Data     []ValidationResult `json:"data"`
 	Included Included           `json:"included"`
 	Links    *Links             `json:"links"`
+	Meta     json.RawMessage    `json:"meta,omitempty"`
+}
+
+func (r *ValidationResultListResponse) PutMeta(v interface{}) (err error) {
+	r.Meta, err = json.Marshal(v)
+	return err
+}
+
+func (r *ValidationResultListResponse) GetMeta(out interface{}) error {
+	return json.Unmarshal(r.Meta, out)
 }
 
 // MustValidationResult - returns ValidationResult from include collection.

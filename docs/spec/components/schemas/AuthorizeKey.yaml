@@ -10,9 +10,4 @@ properties:
     description: User nullifier 32 bytes
   type:
     type: string
-    enum:
-      - request-authorize
-      - request-challenge
-      - token
-      - validation
-      - challenge
+    enum: [ authorize ]

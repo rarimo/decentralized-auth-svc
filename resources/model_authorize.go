@@ -4,6 +4,8 @@
 
 package resources
 
+import "encoding/json"
+
 type Authorize struct {
 	Key
 	Attributes AuthorizeAttributes `json:"attributes"`
@@ -14,9 +16,19 @@ type AuthorizeRequest struct {
 }
 
 type AuthorizeListRequest struct {
-	Data     []Authorize `json:"data"`
-	Included Included    `json:"included"`
-	Links    *Links      `json:"links"`
+	Data     []Authorize     `json:"data"`
+	Included Included        `json:"included"`
+	Links    *Links          `json:"links"`
+	Meta     json.RawMessage `json:"meta,omitempty"`
+}
+
+func (r *AuthorizeListRequest) PutMeta(v interface{}) (err error) {
+	r.Meta, err = json.Marshal(v)
+	return err
+}
+
+func (r *AuthorizeListRequest) GetMeta(out interface{}) error {
+	return json.Unmarshal(r.Meta, out)
 }
 
 // MustAuthorize - returns Authorize from include collection.

@@ -4,6 +4,8 @@
 
 package resources
 
+import "encoding/json"
+
 type Challenge struct {
 	Key
 	Attributes ChallengeAttributes `json:"attributes"`
@@ -14,9 +16,19 @@ type ChallengeResponse struct {
 }
 
 type ChallengeListResponse struct {
-	Data     []Challenge `json:"data"`
-	Included Included    `json:"included"`
-	Links    *Links      `json:"links"`
+	Data     []Challenge     `json:"data"`
+	Included Included        `json:"included"`
+	Links    *Links          `json:"links"`
+	Meta     json.RawMessage `json:"meta,omitempty"`
+}
+
+func (r *ChallengeListResponse) PutMeta(v interface{}) (err error) {
+	r.Meta, err = json.Marshal(v)
+	return err
+}
+
+func (r *ChallengeListResponse) GetMeta(out interface{}) error {
+	return json.Unmarshal(r.Meta, out)
 }
 
 // MustChallenge - returns Challenge from include collection.
