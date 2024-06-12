@@ -19,6 +19,7 @@ func NewAuthorizeRequest(r *http.Request) (*resources.AuthorizeRequest, error) {
 
 	req.Data.ID = strings.ToLower(req.Data.ID)
 	return req, validation.Errors{
-		"data/id": validation.Validate(req.Data.ID, validation.Required, validation.Match(zkp.NullifierRegexp)),
+		"data/id":   validation.Validate(req.Data.ID, validation.Required, validation.Match(zkp.NullifierRegexp)),
+		"data/type": validation.Validate(req.Data.Type, validation.Required, validation.In(resources.AUTHORIZE)),
 	}.Filter()
 }

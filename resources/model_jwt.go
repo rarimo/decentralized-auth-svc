@@ -8,5 +8,5 @@ package resources
 type Jwt struct {
 	// Base64 encoded JWT
 	Token     string `json:"token"`
-	TokenType string `json:"tokenType"`
+	TokenType string `json:"token_type"`
 }

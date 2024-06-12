@@ -3,7 +3,7 @@ get:
     - Authorize
   summary: Request challenge
   description: |
-    Request challenge to generate AuthV2 proof with
+    Request challenge to generate Query proof with
   operationId: challenge
   parameters:
     - $ref: '#/components/parameters/pathNullifier'

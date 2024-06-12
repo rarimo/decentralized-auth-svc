@@ -4,6 +4,8 @@
 
 package resources
 
+import "encoding/json"
+
 type Token struct {
 	Key
 	Attributes TokenAttributes `json:"attributes"`
@@ -14,9 +16,19 @@ type TokenResponse struct {
 }
 
 type TokenListResponse struct {
-	Data     []Token  `json:"data"`
-	Included Included `json:"included"`
-	Links    *Links   `json:"links"`
+	Data     []Token         `json:"data"`
+	Included Included        `json:"included"`
+	Links    *Links          `json:"links"`
+	Meta     json.RawMessage `json:"meta,omitempty"`
+}
+
+func (r *TokenListResponse) PutMeta(v interface{}) (err error) {
+	r.Meta, err = json.Marshal(v)
+	return err
+}
+
+func (r *TokenListResponse) GetMeta(out interface{}) error {
+	return json.Unmarshal(r.Meta, out)
 }
 
 // MustToken - returns Token from include collection.
