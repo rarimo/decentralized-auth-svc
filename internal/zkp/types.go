@@ -20,7 +20,7 @@ const (
 	EventDataSignalsIndex      = 3
 )
 
-const EventID = "ac42d1a986804618c7a793fbe814d9b31e47be51e082806363dca6958f3062"
+const EventID = "211985299740800702300256033401632392934377086534111448880928528431996790315"
 
 const ChallengeExpirationDelta = 5 * time.Minute
 
