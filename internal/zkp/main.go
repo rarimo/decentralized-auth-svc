@@ -62,7 +62,7 @@ func (v *Verifier) VerifyProof(user string, proof *zkptypes.ZKProof) (err error)
 		return ErrChallengeWasNotRequested
 	}
 
-	if challenge.Verified || challenge.Exp.After(time.Now().UTC()) {
+	if challenge.Verified || challenge.Exp.Before(time.Now().UTC()) {
 		return ErrChallengeIsInvalid
 	}
 
