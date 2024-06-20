@@ -35,7 +35,8 @@ func Authorize(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if err := Verifier(r).VerifyProof(new(big.Int).SetBytes(nullifier).String(), &proof); err != nil {
+		if err = Verifier(r).VerifyProof(new(big.Int).SetBytes(nullifier).String(), &proof); err != nil {
+			Log(r).WithError(err).Info("Failed to verify proof")
 			ape.RenderErr(w, problems.Unauthorized())
 			return
 		}

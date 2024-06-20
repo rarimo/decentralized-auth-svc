@@ -72,12 +72,18 @@ func (v *Verifier) VerifyProof(user string, proof *zkptypes.ZKProof) (err error)
 
 	// no error can appear
 	chal, _ := base64.StdEncoding.DecodeString(challenge.Value)
+	chalDec := new(big.Int).SetBytes(chal).String()
 
-	proof.PubSignals[NullifierSignalsIndex] = user
-	proof.PubSignals[EventIDSignalsIndex] = EventID
-	proof.PubSignals[EventDataSignalsIndex] = new(big.Int).SetBytes(chal).String()
+	switch {
+	case proof.PubSignals[NullifierSignalsIndex] != user:
+		return fmt.Errorf("expected user=%s, got %s", user, proof.PubSignals[NullifierSignalsIndex])
+	case proof.PubSignals[EventIDSignalsIndex] != EventID:
+		return fmt.Errorf("expected eventID=%s, got %s", EventID, proof.PubSignals[EventIDSignalsIndex])
+	case proof.PubSignals[EventDataSignalsIndex] != chalDec:
+		return fmt.Errorf("expected challenge=%s, got %s", chalDec, proof.PubSignals[EventDataSignalsIndex])
+	}
 
-	if err := verifier.VerifyGroth16(*proof, verificationKey); err != nil {
+	if err = verifier.VerifyGroth16(*proof, verificationKey); err != nil {
 		return errors.Wrap(err, "failed to verify generated proof")
 	}
 
